@@ -1,12 +1,19 @@
-*/example/node_modules
-
-*/example/.gitignore
-*/example/.gitattributes
 
 */example/.yarn/*
-
 !*/example/.yarn/patches
 !*/example/.yarn/plugins
 !*/example/.yarn/releases
 !*/example/.yarn/sdks
 !*/example/.yarn/versions
+
+
+node_modules
+
+
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+!.yarn/cache
