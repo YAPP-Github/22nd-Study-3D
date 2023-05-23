@@ -1,0 +1,12 @@
+{
+  "name": "22nd-3d-study",
+  "packageManager": "yarn@3.5.1",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "sangjun",
+      "hayoung",
+      "ahyeon"
+    ]
+  }
+}
