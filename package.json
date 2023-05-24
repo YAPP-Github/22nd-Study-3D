@@ -13,5 +13,9 @@
     "sj": "yarn workspace sangjun",
     "hy": "yarn workspace hayoung",
     "ah": "yarn workspace ahyeon"
+  },
+  "dependencies": {
+    "http-server": "^14.1.1",
+    "three": "^0.152.2"
   }
 }

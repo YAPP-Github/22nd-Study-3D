@@ -43,6 +43,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         [null, {\
           "packageLocation": "./",\
           "packageDependencies": [\
+            ["http-server", "npm:14.1.1"],\
+            ["three", "npm:0.152.2"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -51,7 +53,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         ["workspace:.", {\
           "packageLocation": "./",\
           "packageDependencies": [\
-            ["22nd-3d-study", "workspace:."]\
+            ["22nd-3d-study", "workspace:."],\
+            ["http-server", "npm:14.1.1"],\
+            ["three", "npm:0.152.2"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -60,9 +64,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         ["workspace:ahyeon/example", {\
           "packageLocation": "./ahyeon/example/",\
           "packageDependencies": [\
-            ["ahyeon", "workspace:ahyeon/example"],\
-            ["http-server", "npm:14.1.1"],\
-            ["three", "npm:0.152.2"]\
+            ["ahyeon", "workspace:ahyeon/example"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -264,9 +266,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         ["workspace:hayoung/example", {\
           "packageLocation": "./hayoung/example/",\
           "packageDependencies": [\
-            ["hayoung", "workspace:hayoung/example"],\
-            ["http-server", "npm:14.1.1"],\
-            ["three", "npm:0.152.2"]\
+            ["hayoung", "workspace:hayoung/example"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -451,9 +451,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         ["workspace:sangjun/example", {\
           "packageLocation": "./sangjun/example/",\
           "packageDependencies": [\
-            ["sangjun", "workspace:sangjun/example"],\
-            ["http-server", "npm:14.1.1"],\
-            ["three", "npm:0.152.2"]\
+            ["sangjun", "workspace:sangjun/example"]\
           ],\
           "linkType": "SOFT"\
         }]\

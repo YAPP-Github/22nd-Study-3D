@@ -8,15 +8,15 @@ __metadata:
 "22nd-3d-study@workspace:.":
   version: 0.0.0-use.local
   resolution: "22nd-3d-study@workspace:."
+  dependencies:
+    http-server: ^14.1.1
+    three: ^0.152.2
   languageName: unknown
   linkType: soft
 
 "ahyeon@workspace:ahyeon/example":
   version: 0.0.0-use.local
   resolution: "ahyeon@workspace:ahyeon/example"
-  dependencies:
-    http-server: ^14.1.1
-    three: ^0.152.2
   languageName: unknown
   linkType: soft
 
@@ -168,9 +168,6 @@ __metadata:
 "hayoung@workspace:hayoung/example":
   version: 0.0.0-use.local
   resolution: "hayoung@workspace:hayoung/example"
-  dependencies:
-    http-server: ^14.1.1
-    three: ^0.152.2
   languageName: unknown
   linkType: soft
 
@@ -336,9 +333,6 @@ __metadata:
 "sangjun@workspace:sangjun/example":
   version: 0.0.0-use.local
   resolution: "sangjun@workspace:sangjun/example"
-  dependencies:
-    http-server: ^14.1.1
-    three: ^0.152.2
   languageName: unknown
   linkType: soft
 
