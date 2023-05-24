@@ -2,19 +2,6 @@
   "name": "sangjun",
   "packageManager": "yarn@3.5.1",
   "scripts": {
-    "start": "webpack --mode=development && http-server -c-1 -o -p 3000 ./dist",
-    "build": "webpack --mode=production"
-  },
-  "dependencies": {
-    "http-server": "^14.1.1",
-    "three": "^0.152.2"
-  },
-  "devDependencies": {
-    "css-loader": "^6.7.4",
-    "pnp-webpack-plugin": "^1.7.0",
-    "style-loader": "^3.3.3",
-    "webpack": "^5.83.1",
-    "webpack-cli": "^5.1.1",
-    "webpack-dev-server": "^4.15.0"
+    "start": "http-server -c-1 -o "
   }
 }
