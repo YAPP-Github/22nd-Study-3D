@@ -1,10 +1,11 @@
+const PnpWebpackPlugin = require(`pnp-webpack-plugin`);
 const path = require("path");
 
 module.exports = {
   entry: "./src/main.js",
   output: {
     filename: "main.js",
-    path: path.resolve(__dirname, "dist"),
+    path: path.resolve(__dirname, "public"),
   },
   module: {
     rules: [
@@ -15,7 +16,9 @@ module.exports = {
     ],
   },
   devServer: {
-    contentBase: path.join(__dirname, "public"),
+    static: {
+      directory: path.join(__dirname, "public"),
+    },
     compress: true,
     port: 3000,
   },
