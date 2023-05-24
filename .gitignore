@@ -1,4 +1,4 @@
-
+# 개인 프로젝트 패키지 ignore 설정
 */example/.yarn/*
 !*/example/.yarn/patches
 !*/example/.yarn/plugins
@@ -6,10 +6,7 @@
 !*/example/.yarn/sdks
 !*/example/.yarn/versions
 
-
-node_modules
-
-
+# 루트 프로젝트 패키지 ignore 설정
 .yarn/*
 !.yarn/patches
 !.yarn/plugins
@@ -17,3 +14,7 @@ node_modules
 !.yarn/sdks
 !.yarn/versions
 !.yarn/cache
+
+
+# build 파일
+sangjun/example/dist
