@@ -1,0 +1,11 @@
+{
+  "name": "sangjun",
+  "packageManager": "yarn@3.5.1",
+  "scripts": {
+    "start": "http-server -c-1 -o"
+  },
+  "dependencies": {
+    "http-server": "^14.1.1",
+    "three": "^0.152.2"
+  }
+}

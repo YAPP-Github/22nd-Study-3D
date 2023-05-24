@@ -4,9 +4,14 @@
   "private": true,
   "workspaces": {
     "packages": [
-      "sangjun",
-      "hayoung",
-      "ahyeon"
+      "sangjun/example",
+      "hayoung/example",
+      "ahyeon/example"
     ]
+  },
+  "scripts": {
+    "sj": "yarn workspace sangjun",
+    "hy": "yarn workspace hayoung",
+    "ah": "yarn workspace ahyeon"
   }
 }

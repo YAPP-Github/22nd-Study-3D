@@ -1,0 +1,8 @@
+{
+  "name": "hayoung",
+  "packageManager": "yarn@3.5.1",
+  "dependencies": {
+    "http-server": "^14.1.1",
+    "three": "^0.152.2"
+  }
+}
