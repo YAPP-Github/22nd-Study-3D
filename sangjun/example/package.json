@@ -2,7 +2,7 @@
   "name": "sangjun",
   "packageManager": "yarn@3.5.1",
   "scripts": {
-    "start": "webpack --mode=development && http-server -c-1 -o -p 3000 ./dist",
+    "start:dev": "webpack-dev-server --mode development --open --hot",
     "build": "webpack --mode=production"
   },
   "devDependencies": {
