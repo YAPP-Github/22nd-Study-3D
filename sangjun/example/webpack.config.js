@@ -1,10 +1,9 @@
-const PnpWebpackPlugin = require(`pnp-webpack-plugin`);
 const path = require("path");
 
 module.exports = {
-  entry: "./src/main.js",
+  entry: "./src/main.ts",
   output: {
-    filename: "main.js",
+    filename: "./main.js",
     path: path.resolve(__dirname, "public"),
   },
   module: {
@@ -12,6 +11,10 @@ module.exports = {
       {
         test: /\.css$/,
         use: ["style-loader", "css-loader"],
+      },
+      {
+        test: /\.ts/,
+        use: "ts-loader",
       },
     ],
   },
@@ -21,5 +24,8 @@ module.exports = {
     },
     compress: true,
     port: 3000,
+  },
+  resolve: {
+    extensions: [".tsx", ".ts", ".js"],
   },
 };
