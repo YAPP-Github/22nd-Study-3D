@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "removeComments": true, //컴파일시 주석제거
+    "baseUrl": ".",
+    "module": "commonjs",
+    "resolveJsonModule": true,
+
+    "strict": true,
+    "strictNullChecks": true, //null, undefined 타입에 이상한 짓 할시 에러내기
+    "strictFunctionTypes": true, //함수파라미터 타입체크 강하게
+    "strictPropertyInitialization": true, //class constructor 작성시 타입체크 강하게
+    "noImplicitThis": true, //this 키워드가 any 타입일 경우 에러내기
+    "alwaysStrict": true, //자바스크립트 "use strict" 모드 켜기
+    "noUnusedLocals": true, //쓰지않는 지역변수 있으면 에러내기
+    "noUnusedParameters": true //쓰지않는 파라미터 있으면 에러내기
+  }
+}
