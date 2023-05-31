@@ -1,5 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "./three.js-master/examples/jsm/controls/OrbitControls";
+import { FontLoader } from "./three.js-master/examples/jsm/loaders/FontLoader";
+import { TextGeometry } from "./three.js-master/examples/jsm/geometries/TextGeometry";
 class App {
   constructor() {
     const divContainer = document.querySelector("#webgl-container");
@@ -72,25 +74,34 @@ class App {
   }
 
   _setupModel() {
-    // LatheGeometry에서 y축으로 회전시킬 선
-    const points = [];
-    for (let i = 0; i < 10; ++i) {
-      points.push(new THREE.Vector2(Math.sin(i * 0.2) * 3 + 3, (i - 5) * 0.8));
+    const fontLoader = new FontLoader();
+    async function loadFont(that) {
+      const url = "/fonts/helvetiker_regular.typeface.json";
+      const font = await new Promise((resolve, reject) => {
+        fontLoader.load(url, resolve, undefined, reject);
+      });
+      const geometry =new TextGeometry("HA YEONG", {
+        font,
+        size: 5,
+        height: 1.5,
+        curveSegments: 4,
+        
+      });
+
+      const material = new THREE.MeshPhongMaterial({ color: 0x515151 });
+      const cube = new THREE.Mesh(geometry, material);
+
+      const lineMaterial = new THREE.LineBasicMaterial({ color: 0xffff00 });
+      const line = new THREE.LineSegments(new THREE.WireframeGeometry(geometry), lineMaterial);
+
+      const group = new THREE.Group();
+      group.add(cube);
+      group.add(line);
+
+      that._scene.add(group);
+      that._cube = group;
     }
-    const geometry = new THREE.LatheGeometry(points);
-
-    const material = new THREE.MeshPhongMaterial({ color: 0x515151 });
-    const cube = new THREE.Mesh(geometry, material);
-
-    const lineMaterial = new THREE.LineBasicMaterial({ color: 0xffff00 });
-    const line = new THREE.LineSegments(new THREE.WireframeGeometry(geometry), lineMaterial);
-
-    const group = new THREE.Group();
-    group.add(cube);
-    group.add(line);
-
-    this._scene.add(group);
-    this._cube = group;
+    loadFont(this);
   }
 
   resize() {
