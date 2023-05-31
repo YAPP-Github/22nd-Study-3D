@@ -54,8 +54,8 @@ class App {
     shape.closePath();
     return shape;
   }
-  
-  _setupModelWithCurve() {
+
+  _getCurve(scale) {
     class CustomSinCurve extends THREE.Curve {
       constructor(scale) {
         super();
@@ -68,23 +68,13 @@ class App {
         return new THREE.Vector3(tx, ty, tz).multiplyScalar(this.scale);
       }
     }
-
-    const path = new CustomSinCurve(4);
-
-    const geometry = new THREE.BufferGeometry();
-    const points = path.getPoints(100);
-    geometry.setFromPoints(points);
-
-    const material = new THREE.LineBasicMaterial({ color: 0xffff00 });
-    const line = new THREE.Line(geometry, material);
-
-    this._scene.add(line);
+    return new CustomSinCurve(scale);
   }
 
   _setupModel() {
-    const shape = this._getShape();
+    const path = this._getCurve(4);
     // 회색 정육면체 메쉬를 생성. geometry 객체 + material 객체
-    const geometry = new THREE.ShapeGeometry(shape);
+    const geometry = new THREE.TubeGeometry(path);
     const material = new THREE.MeshPhongMaterial({ color: 0x515151 });
     const cube = new THREE.Mesh(geometry, material);
 
