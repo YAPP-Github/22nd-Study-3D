@@ -1,5 +1,5 @@
 {
-  "name": "hayoung",
+  "name": "hayeong",
   "packageManager": "yarn@3.5.1",
   "scripts": {
     "start": "webpack-dev-server --mode development --open --hot --port 3000",

@@ -30,7 +30,7 @@
     "workspaces": [
       "packages/*", //폴더 경로 입력, 입력된 경로 모두 워크스페이스로 간주된다
       "sangjun/example*",
-  		"hayoung/example*",
+  		"hayeong/example*",
   		"ahyeon/example*"
     ]
   	"private":true //npm에 게시하지 않음

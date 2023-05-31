@@ -5,13 +5,13 @@
   "workspaces": {
     "packages": [
       "sangjun/example",
-      "hayoung/example",
+      "hayeong/example",
       "ahyeon/example"
     ]
   },
   "scripts": {
     "sj": "yarn workspace sangjun",
-    "hy": "yarn workspace hayoung",
+    "hy": "yarn workspace hayeong",
     "ah": "yarn workspace ahyeon"
   },
   "devDependencies": {
