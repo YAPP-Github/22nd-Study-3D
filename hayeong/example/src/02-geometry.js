@@ -54,8 +54,35 @@ class App {
     shape.closePath();
     return shape;
   }
+  
+  _setupModelWithCurve() {
+    class CustomSinCurve extends THREE.Curve {
+      constructor(scale) {
+        super();
+        this.scale = scale;
+      }
+      getPoint(t) {
+        const tx = t * 3 - 1.5;
+        const ty = Math.sin(2 * Math.PI * t);
+        const tz = 0;
+        return new THREE.Vector3(tx, ty, tz).multiplyScalar(this.scale);
+      }
+    }
+
+    const path = new CustomSinCurve(4);
+
+    const geometry = new THREE.BufferGeometry();
+    const points = path.getPoints(100);
+    geometry.setFromPoints(points);
+
+    const material = new THREE.LineBasicMaterial({ color: 0xffff00 });
+    const line = new THREE.Line(geometry, material);
+
+    this._scene.add(line);
+  }
+
   _setupModel() {
-    const shape = this._getShape()
+    const shape = this._getShape();
     // 회색 정육면체 메쉬를 생성. geometry 객체 + material 객체
     const geometry = new THREE.ShapeGeometry(shape);
     const material = new THREE.MeshPhongMaterial({ color: 0x515151 });
