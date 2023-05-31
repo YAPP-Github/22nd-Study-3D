@@ -72,9 +72,13 @@ class App {
   }
 
   _setupModel() {
-    const path = this._getCurve(4);
-    // 회색 정육면체 메쉬를 생성. geometry 객체 + material 객체
-    const geometry = new THREE.TubeGeometry(path);
+    // LatheGeometry에서 y축으로 회전시킬 선
+    const points = [];
+    for (let i = 0; i < 10; ++i) {
+      points.push(new THREE.Vector2(Math.sin(i * 0.2) * 3 + 3, (i - 5) * 0.8));
+    }
+    const geometry = new THREE.LatheGeometry(points);
+
     const material = new THREE.MeshPhongMaterial({ color: 0x515151 });
     const cube = new THREE.Mesh(geometry, material);
 
