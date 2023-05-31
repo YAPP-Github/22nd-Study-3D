@@ -45,25 +45,19 @@ class App {
     this._scene.add(light);
   }
 
-  _setupModelWithShape() {
-    const shape = new THREE.Shape()
-    shape.moveTo(1, 1)
-    shape.lineTo(1, -1)
-    shape.lineTo(-1, -1)
-    shape.lineTo(-1, 1)
-    shape.closePath()
-
-    const geometry = new THREE.BufferGeometry()
-    const points = shape.getPoints()
-    geometry.setFromPoints(points)
-
-    const material = new THREE.LineBasicMaterial({ color: 0xffff00 });
-    const line = new THREE.Line(geometry, material)
-    this._scene.add(line);
+  _getShape() {
+    const shape = new THREE.Shape();
+    shape.moveTo(1, 1);
+    shape.lineTo(1, -1);
+    shape.lineTo(-1, -1);
+    shape.lineTo(-1, 1);
+    shape.closePath();
+    return shape;
   }
   _setupModel() {
+    const shape = this._getShape()
     // 회색 정육면체 메쉬를 생성. geometry 객체 + material 객체
-    const geometry = new THREE.CircleGeometry(1, 8, Math.PI / 2, Math.PI / 4);
+    const geometry = new THREE.ShapeGeometry(shape);
     const material = new THREE.MeshPhongMaterial({ color: 0x515151 });
     const cube = new THREE.Mesh(geometry, material);
 
