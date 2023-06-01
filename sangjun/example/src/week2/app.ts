@@ -1,13 +1,13 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { shpere } from "./geometry";
+import { ExtrudeObject } from "./geometry";
 
 class App {
   divContainer: HTMLElement;
   renderer: THREE.WebGLRenderer;
   scene: THREE.Scene;
   camera: THREE.PerspectiveCamera;
-  mesh: THREE.Mesh | THREE.Group;
+  // mesh: THREE.Mesh | THREE.Group;
 
   constructor() {
     const container = document.getElementById("webgl-container") as HTMLElement;
@@ -26,11 +26,11 @@ class App {
     this.camera = this.setupCamera();
 
     // 메시 생성
-    this.mesh = this.generateMesh();
+    // this.mesh = this.generateMesh();
 
     //카메라, 빛, 모델 세팅
     this.setUpLight();
-    this.setUpModel(this.mesh);
+    this.setUpModel(new ExtrudeObject());
     this.setupControls();
     //이벤트핸들러에 this 바인딩 해서 콜백함수 전달.
     window.onresize = this.resize.bind(this);
@@ -45,7 +45,7 @@ class App {
     const { clientWidth: width, clientHeight: height } = this.divContainer;
     //카메라 인스턴스 생성 후 camera에 할당
     const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 100);
-    camera.position.z = 2;
+    camera.position.z = 15;
     return camera;
   }
   setUpLight() {
@@ -57,29 +57,28 @@ class App {
     const light = new THREE.DirectionalLight(color, instensity);
     light.position.set(-1, 2, 4);
 
-    console.log(light);
     this.scene.add(light);
   }
 
-  generateMesh() {
-    const geometry = shpere;
-    const fillMaterial = new THREE.MeshPhongMaterial({ color: 0x515151 });
-    const lineMaterial = new THREE.LineBasicMaterial({ color: 0xffff00 });
+  // generateMesh() {
+  //   const geometry = shpere;
+  //   const fillMaterial = new THREE.MeshPhongMaterial({ color: 0x515151 });
+  //   const lineMaterial = new THREE.LineBasicMaterial({ color: 0xffff00 });
 
-    const line = new THREE.LineSegments(
-      new THREE.WireframeGeometry(geometry), // 와이어프레임 형태로 Geometry 표현, 없으면 모든 외곽선이 나오지 않을수 있음
-      lineMaterial
-    );
-    const obj = new THREE.Mesh(geometry, fillMaterial);
-    const group = new THREE.Group();
+  //   const line = new THREE.LineSegments(
+  //     new THREE.WireframeGeometry(geometry), // 와이어프레임 형태로 Geometry 표현, 없으면 모든 외곽선이 나오지 않을수 있음
+  //     lineMaterial
+  //   );
+  //   const obj = new THREE.Mesh(geometry, fillMaterial);
+  //   const group = new THREE.Group();
 
-    group.add(obj);
-    group.add(line);
+  //   group.add(obj);
+  //   group.add(line);
 
-    return group;
-  }
+  //   return group;
+  // }
 
-  setUpModel(obj: THREE.Mesh | THREE.Group) {
+  setUpModel(obj: THREE.Object3D) {
     this.scene.add(obj);
   }
 

@@ -6,3 +6,7 @@ export * from "./plane";
 export * from "./torus";
 export * from "./torusKnot";
 export * from "./ring";
+export * from "./shape";
+export * from "./curve";
+export * from "./lathe";
+export * from "./extrude";
