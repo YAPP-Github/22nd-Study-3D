@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 class App {
   divContainer: HTMLElement;
@@ -20,12 +21,16 @@ class App {
     //씬 생성
     this.scene = new THREE.Scene();
 
-    //카메라, 빛, 모델 세팅
+    // 카메라 생성
     this.camera = this.setupCamera();
-    this.setUpLight();
-    this.cube = this.generateCube();
-    this.setUpModel(this.cube);
 
+    // 큐브 생성
+    this.cube = this.generateCube();
+
+    //카메라, 빛, 모델 세팅
+    this.setUpLight();
+    this.setUpModel(this.cube);
+    this.setupControls();
     //이벤트핸들러에 this 바인딩 해서 콜백함수 전달.
     window.onresize = this.resize.bind(this);
 
@@ -57,7 +62,7 @@ class App {
 
   // 파란 큐브에서 노란 선이 있는 큐브로 변화
   generateCube() {
-    const geometry = new THREE.BoxGeometry(1, 1, 1);
+    const geometry = new THREE.BoxGeometry(1, 1, 1, 2, 2, 2);
     const fillMaterial = new THREE.MeshPhongMaterial({ color: 0x515151 });
     const lineMaterial = new THREE.LineBasicMaterial({ color: 0xffff00 });
 
@@ -90,17 +95,20 @@ class App {
     this.renderer.setSize(width, height);
   }
 
-  render(time: number) {
+  setupControls() {
+    new OrbitControls(this.camera, this.divContainer);
+  }
+
+  render() {
     this.renderer.render(this.scene, this.camera);
-    this.update(time);
     requestAnimationFrame(this.render.bind(this));
   }
 
-  update(time: number) {
-    time *= 0.001; // 초 단위로 변환
-    this.cube.rotation.x = time; // 시간에 따라 회전
-    this.cube.rotation.y = time;
-  }
+  // update(time: number) {
+  //   time *= 0.001; // 초 단위로 변환
+  //   this.cube.rotation.x = time; // 시간에 따라 회전
+  //   this.cube.rotation.y = time;
+  // }
 }
 
 export default App;
