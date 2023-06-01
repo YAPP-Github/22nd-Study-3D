@@ -1,12 +1,13 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { shpere } from "./geometry";
 
 class App {
   divContainer: HTMLElement;
   renderer: THREE.WebGLRenderer;
   scene: THREE.Scene;
   camera: THREE.PerspectiveCamera;
-  cube: THREE.Mesh | THREE.Group;
+  mesh: THREE.Mesh | THREE.Group;
 
   constructor() {
     const container = document.getElementById("webgl-container") as HTMLElement;
@@ -24,12 +25,12 @@ class App {
     // 카메라 생성
     this.camera = this.setupCamera();
 
-    // 큐브 생성
-    this.cube = this.generateCube();
+    // 메시 생성
+    this.mesh = this.generateMesh();
 
     //카메라, 빛, 모델 세팅
     this.setUpLight();
-    this.setUpModel(this.cube);
+    this.setUpModel(this.mesh);
     this.setupControls();
     //이벤트핸들러에 this 바인딩 해서 콜백함수 전달.
     window.onresize = this.resize.bind(this);
@@ -60,9 +61,8 @@ class App {
     this.scene.add(light);
   }
 
-  // 파란 큐브에서 노란 선이 있는 큐브로 변화
-  generateCube() {
-    const geometry = new THREE.BoxGeometry(1, 1, 1, 2, 2, 2);
+  generateMesh() {
+    const geometry = shpere;
     const fillMaterial = new THREE.MeshPhongMaterial({ color: 0x515151 });
     const lineMaterial = new THREE.LineBasicMaterial({ color: 0xffff00 });
 
@@ -70,10 +70,10 @@ class App {
       new THREE.WireframeGeometry(geometry), // 와이어프레임 형태로 Geometry 표현, 없으면 모든 외곽선이 나오지 않을수 있음
       lineMaterial
     );
-    const cube = new THREE.Mesh(geometry, fillMaterial);
+    const obj = new THREE.Mesh(geometry, fillMaterial);
     const group = new THREE.Group();
 
-    group.add(cube);
+    group.add(obj);
     group.add(line);
 
     return group;
@@ -106,8 +106,8 @@ class App {
 
   // update(time: number) {
   //   time *= 0.001; // 초 단위로 변환
-  //   this.cube.rotation.x = time; // 시간에 따라 회전
-  //   this.cube.rotation.y = time;
+  //   this.mesh.rotation.x = time; // 시간에 따라 회전
+  //   this.mesh.rotation.y = time;
   // }
 }
 
