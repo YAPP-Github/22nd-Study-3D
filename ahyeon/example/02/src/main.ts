@@ -10,7 +10,7 @@ class App {
   private _renderer: THREE.WebGLRenderer;
   private _scene: THREE.Scene;
   private _camera!: THREE.PerspectiveCamera;
-  // private _cube!: THREE.Mesh | THREE.Group;
+  private _cube!: THREE.Mesh | THREE.Group;
 
   constructor() {
     const divContainer = document.querySelector("#webgl-container") as HTMLElement;
