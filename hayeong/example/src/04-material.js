@@ -50,17 +50,38 @@ class App {
   }
 
   _setupModel() {
-    const material = new THREE.MeshPhysicalMaterial({
-      color: 0xff0000,
-      emissive: 0x555500,
-      roughness: 1,
-      matalness: 0,
-      wireframe: false,
-      flatShading: false,
+    const textureLoader = new THREE.TextureLoader();
+    const map = textureLoader.load(
+      '/assets/uv_grid_opengl.jpg',
+      texture => {
+        // texture의 반복수
+        texture.repeat.x = 2
+        texture.repeat.y = 2
 
-      clearcoat: 1,
-      clearcoatRoughness: 0
+        // texture를 어떻게 반복할 것인지 지정
+        texture.wrapS = THREE.RepeatWrapping
+        texture.wrapT = THREE.RepeatWrapping
+        // texture.wrapT = THREE.ClampToEdgeWrapping
+        // texture.wrapT = THREE.MirroredRepeatWrapping
+
+        // uv 좌표의 시작 위치 조정
+        texture.offset.x = 0
+        texture.offset.y = 0
+
+        // 이미지를 회전시켜서 맵핑. center로 회전 기준을 지정할 수 있음
+        texture.rotation = THREE.MathUtils.degToRad(45)
+        texture.center.x = 0.5
+        texture.center.y = 0.5
+
+        texture.magFilter = THREE.NearestFilter
+        texture.minFilter = THREE.NearestMipmapLinearFilter
+      }
+    )
+
+    const material = new THREE.MeshStandardMaterial({
+      map
     });
+
 
     const box = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), material);
     box.position.set(-1, 0, 0);
