@@ -50,15 +50,12 @@ class App {
   }
 
   _setupModel() {
-    const material = new THREE.MeshLambertMaterial({
-      // Material의 속성값
-      transparent: true,
-      opacity: 0.8,
-      side: THREE.DoubleSide,
-
+    const material = new THREE.MeshPhongMaterial({
       color: 0xff0000,
       emissive: 0x555500,
-      wireframe: false,
+      specular: 0xffff00,
+      shininess: 10,
+      flatShading: true,
     });
 
     const box = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), material);
