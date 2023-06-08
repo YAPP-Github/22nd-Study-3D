@@ -6,6 +6,7 @@ module.exports = {
     "01-basic": "./src/01-basic.js",
     "02-geometry": "./src/02-geometry.js",
     "03-scene-graph": "./src/03-scene-graph.js",
+    "04-material": "./src/04-material.js",
   },
   output: {
     filename: "./[name].js",
