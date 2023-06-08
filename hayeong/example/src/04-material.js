@@ -60,11 +60,15 @@ class App {
     const geometry = new THREE.BufferGeometry();
     geometry.setAttribute("position", new THREE.Float32BufferAttribute(vertices, 3));
 
-    const material = new THREE.LineBasicMaterial({
+    const material = new THREE.LineDashedMaterial({
       color: 0xffff00,
+      dashSize: 0.2,
+      gapSize: 0.1,
+      scale:1
     });
 
     const line = new THREE.LineLoop(geometry, material);
+    line.computeLineDistances()
     this._scene.add(line);
   }
 
