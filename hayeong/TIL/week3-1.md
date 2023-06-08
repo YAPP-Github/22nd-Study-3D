@@ -1,4 +1,4 @@
-# 3강 Scene Graph를 이용한 공간구성
+# 4강 Scene Graph를 이용한 공간구성
 
 ## 시작하기 전에
 
