@@ -1,5 +1,7 @@
 import * as THREE from "three";
-
+import { OrbitControls } from "./three.js-master/examples/jsm/controls/OrbitControls";
+import { FontLoader } from "./three.js-master/examples/jsm/loaders/FontLoader";
+import { TextGeometry } from "./three.js-master/examples/jsm/geometries/TextGeometry";
 class App {
   constructor() {
     const divContainer = document.querySelector("#webgl-container");
@@ -18,14 +20,16 @@ class App {
     this._setupCamera();
     this._setupLight();
     this._setupModel();
-
+    this._setupControls();
     /* resize 이벤트 처리 */
     window.onresize = this.resize.bind(this);
     this.resize();
 
     requestAnimationFrame(this.render.bind(this));
   }
-
+  _setupControls() {
+    new OrbitControls(this._camera, this._divContainer);
+  }
   _setupCamera() {
     const width = this._divContainer.clientWidth;
     const height = this._divContainer.clientHeight;
@@ -43,15 +47,61 @@ class App {
     this._scene.add(light);
   }
 
+  _getShape() {
+    const shape = new THREE.Shape();
+    shape.moveTo(1, 1);
+    shape.lineTo(1, -1);
+    shape.lineTo(-1, -1);
+    shape.lineTo(-1, 1);
+    shape.closePath();
+    return shape;
+  }
+
+  _getCurve(scale) {
+    class CustomSinCurve extends THREE.Curve {
+      constructor(scale) {
+        super();
+        this.scale = scale;
+      }
+      getPoint(t) {
+        const tx = t * 3 - 1.5;
+        const ty = Math.sin(2 * Math.PI * t);
+        const tz = 0;
+        return new THREE.Vector3(tx, ty, tz).multiplyScalar(this.scale);
+      }
+    }
+    return new CustomSinCurve(scale);
+  }
+
   _setupModel() {
-    // 파란색 정육면체 메쉬를 생성. geometry 객체 + material 객체
-    const geometry = new THREE.BoxGeometry(1, 1, 1); // 정육면체 형상 정의, 가로, 세로, 깊이 지정
-    const material = new THREE.MeshPhongMaterial({ color: 0x44a88 });
+    const fontLoader = new FontLoader();
+    async function loadFont(that) {
+      const url = "/fonts/helvetiker_regular.typeface.json";
+      const font = await new Promise((resolve, reject) => {
+        fontLoader.load(url, resolve, undefined, reject);
+      });
+      const geometry =new TextGeometry("HA YEONG", {
+        font,
+        size: 5,
+        height: 1.5,
+        curveSegments: 4,
+        
+      });
 
-    const cube = new THREE.Mesh(geometry, material);
+      const material = new THREE.MeshPhongMaterial({ color: 0x515151 });
+      const cube = new THREE.Mesh(geometry, material);
 
-    this._scene.add(cube);
-    this._cube = cube;
+      const lineMaterial = new THREE.LineBasicMaterial({ color: 0xffff00 });
+      const line = new THREE.LineSegments(new THREE.WireframeGeometry(geometry), lineMaterial);
+
+      const group = new THREE.Group();
+      group.add(cube);
+      group.add(line);
+
+      that._scene.add(group);
+      that._cube = group;
+    }
+    loadFont(this);
   }
 
   resize() {
@@ -76,8 +126,8 @@ class App {
 
   update(time) {
     time *= 0.001; // ms -> s
-    this._cube.rotation.x = time;
-    this._cube.rotation.y = time;
+    // this._cube.rotation.x = time;
+    // this._cube.rotation.y = time;
     // 시간은 계속 변하므로 큐브가 계속 회전함
   }
 }
