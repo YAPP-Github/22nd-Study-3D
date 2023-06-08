@@ -1,9 +1,13 @@
 const path = require("path");
 
 module.exports = {
-  entry: "./src/main.ts",
+  entry: {
+    main: "./src/main.ts",
+    "01-basic": "./src/01-basic.js",
+    "02-geometry": "./src/02-geometry.js"
+  },
   output: {
-    filename: "./main.js",
+    filename: "./[name].js",
     path: path.resolve(__dirname, "public"),
   },
   module: {

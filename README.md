@@ -26,7 +26,7 @@
 ├─ sangjun
 │  ├─ TIL
 │  └─ example
-├─ hayoung
+├─ hayeong
 │  ├─ TIL
 │  └─ example
 ├─ jieun

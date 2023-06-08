@@ -1,5 +1,10 @@
 import * as THREE from "three";
+// import { Vector3 } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { FontLoader } from "three/examples/jsm/loaders/FontLoader.js"
+import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry.js"
+
+
 class App {
   private _divContainer: HTMLElement;
   private _renderer: THREE.WebGLRenderer;
@@ -35,7 +40,7 @@ class App {
     const width = this._divContainer.clientWidth;
     const height = this._divContainer.clientHeight;
     const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 100);
-    camera.position.z = 2;
+    camera.position.z = 10;
     this._camera = camera;
   }
 
@@ -48,19 +53,41 @@ class App {
   }
 
   private _setupModel() {
-    const geometry = new THREE.BoxGeometry(1, 1, 1);
-    const material = new THREE.MeshPhongMaterial({ color: 0x515151 });
-    const cube = new THREE.Mesh(geometry, material);
+    const fontLoader = new FontLoader();
+    async function loadFonts(that: any) {
+      const url = "../examples/fonts/Pretendard-Regular";
+      const font = await new Promise<any>((resolve, reject) => {
+        fontLoader.load(url, resolve, undefined, reject);
+      })
 
-    const lineMaterial = new THREE.LineBasicMaterial({ color: 0xffffff });
-    const line = new THREE.LineSegments(new THREE.WireframeGeometry, lineMaterial);
+      const geometry = new TextGeometry("test", {
+        font: font,
+        size: 5,
+        height: 1,
+        curveSegments: 4,
+        bevelEnabled: true,
+        bevelThickness: 0.5,
+        bevelSize: .5,
+        bevelOffset: 0,
+        bevelSegments: 2
+      })
 
-    const group = new THREE.Group()
-    group.add(cube);
-    group.add(line);
 
-    this._scene.add(group);
-    this._cube = group;
+      const material = new THREE.MeshPhongMaterial({ color: 0x515151 });
+      const cube = new THREE.Mesh(geometry, material);
+
+      const lineMaterial = new THREE.LineBasicMaterial({ color: 0xffffff });
+      const line = new THREE.LineSegments(new THREE.WireframeGeometry(geometry), lineMaterial);
+
+      const group = new THREE.Group()
+      group.add(cube);
+      group.add(line);
+
+      that._scene.add(group);
+      that._cube = group;
+    }
+
+    loadFonts(this);
   }
 
   private _setupControls() {
@@ -77,18 +104,15 @@ class App {
     this._renderer.setSize(width, height);
   }
 
-  render(time: number) {
+  render() {
     this._renderer.render(this._scene, this._camera);
-    this.update(time);
+    // this.update(time);
     requestAnimationFrame(this.render.bind(this));
   }
 
-  update(time: number) {
-    time *= 0.001; // secondunit
-    // this._cube.rotation.x = time;
-    // this._cube.rotation.y = time;
-    // this._cube.rotation.z = time;
-  }
+  // update(time: number) {
+  //   time *= 0.0001; // secondunit
+  // }
 }
 
 window.onload = function () {
