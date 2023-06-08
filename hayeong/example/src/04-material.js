@@ -50,12 +50,13 @@ class App {
   }
 
   _setupModel() {
-    const material = new THREE.MeshPhongMaterial({
+    const material = new THREE.MeshStandardMaterial({
       color: 0xff0000,
       emissive: 0x555500,
-      specular: 0xffff00,
-      shininess: 10,
-      flatShading: true,
+      roughness: 0.25,
+      matalness: 1,
+      wireframe: false,
+      flatShading: false,
     });
 
     const box = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), material);
