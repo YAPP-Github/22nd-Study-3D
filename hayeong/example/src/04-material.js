@@ -50,17 +50,14 @@ class App {
   }
 
   _setupModel() {
-    const material = new THREE.MeshBasicMaterial({
+    const material = new THREE.MeshLambertMaterial({
       // Material의 속성값
-      visible: true,
       transparent: true,
-      opacity: 1,
-      depthTest: true,
-      depthWrite: true,
-      side: THREE.FrontSide,
+      opacity: 0.8,
+      side: THREE.DoubleSide,
 
-      // MeshBasicMaterial의 속성값
-      color: 0xffffff,
+      color: 0xff0000,
+      emissive: 0x555500,
       wireframe: false,
     });
 
