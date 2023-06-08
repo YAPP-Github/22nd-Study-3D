@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import {OrbitControls} from './three.js-master/examples/jsm/controls/OrbitControls'
+import { OrbitControls } from "./three.js-master/examples/jsm/controls/OrbitControls";
 
 class App {
   constructor() {
@@ -29,7 +29,7 @@ class App {
   }
 
   _setupControls() {
-    new OrbitControls(this._camera, this._divContainer)
+    new OrbitControls(this._camera, this._divContainer);
   }
 
   _setupCamera() {
@@ -50,34 +50,22 @@ class App {
   }
 
   _setupModel() {
-    /* 10000개의 points를 scene에 추가 */
-    const vertices = [];
-    for(let i = 0; i<10000; i++) {
-      // 0~5 사이의 값을 랜덤으로 생성
-      const x = THREE.MathUtils.randFloatSpread(5)
-      const y = THREE.MathUtils.randFloatSpread(5)
-      const z = THREE.MathUtils.randFloatSpread(5)
+    const vertices = [
+      -1, 1, 0, 
+      1, 1, 0, 
+      -1, -1, 0, 
+      1, -1, 0
+    ];
 
-      vertices.push(x,y,z)
-    }
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute("position", new THREE.Float32BufferAttribute(vertices, 3));
 
-    const geometry = new THREE.BufferGeometry()
-    geometry.setAttribute(
-      "position",
-      new THREE.Float32BufferAttribute(vertices, 3) // vertices에 x,y,z 좌표 3개가 들어있으므로 3으로 지정
-    ) // geometry의 position 속성 지정
+    const material = new THREE.LineBasicMaterial({
+      color: 0xffff00,
+    });
 
-    const sprite = new THREE.TextureLoader().load("/assets/disc.png")
-    const material = new THREE.PointsMaterial({
-      map: sprite,
-      alphaTest: 0.5,
-      color: 0xff0000,
-      size: 0.1,
-      sizeAttenuation: true
-    })
-
-    const points = new THREE.Points(geometry, material)
-    this._scene.add(points)
+    const line = new THREE.LineLoop(geometry, material);
+    this._scene.add(line);
   }
 
   resize() {
