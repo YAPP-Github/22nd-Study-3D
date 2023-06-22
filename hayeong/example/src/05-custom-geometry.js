@@ -56,14 +56,25 @@ class App {
     const positions = new Float32Array(rawPositions);
     const geometry = new THREE.BufferGeometry();
 
+    // 법선 벡터를 직접 지정
+    const rawNormals = [0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1];
+    const normals = new Float32Array(rawNormals);
+
     geometry.setAttribute("poisition", new THREE.BufferAttribute(positions, 3)); // 하나의 정점이 (x, y, z) 3개의 항목으로 구성됨
+    geometry.setAttribute("normal", new THREE.BufferAttribute(normals));
     // Vertex index 지정. 정점의 배치 순서가 반시계 방향이어여야 한다
     geometry.setIndex([0, 1, 2, 2, 1, 3]);
+
+    // 모든 정점에 대해 법선 벡터를 자동으로 지정
+    // geometry.computeVertexNormals()
 
     const material = new THREE.MeshPhongMaterial({ color: 0xff0000 });
     const box = new THREE.Mesh(geometry, material);
     this._scene.add(box);
 
+    // 법선벡터 시각화
+    // const boxHelper = new VertexNormalsHelper(box, 0.1, 0xffff00)
+    // this._scene.add(boxHelper)
   }
 
   resize() {
@@ -88,8 +99,7 @@ class App {
 
   update(time) {
     time *= 0.001; // ms -> s
-    this._cube.rotation.x = time;
-    this._cube.rotation.y = time;
+
     // 시간은 계속 변하므로 큐브가 계속 회전함
   }
 }
