@@ -1,4 +1,6 @@
 import * as THREE from "three";
+import { VertexNormalsHelper } from "./three.js-master/examples/jsm/helpers/VertexNormalsHelper";
+import { OrbitControls } from "./three.js-master/examples/jsm/controls/OrbitControls";
 
 class App {
   constructor() {
@@ -18,12 +20,17 @@ class App {
     this._setupCamera();
     this._setupLight();
     this._setupModel();
+    this._setupControls();
 
     /* resize 이벤트 처리 */
     window.onresize = this.resize.bind(this);
     this.resize();
 
     requestAnimationFrame(this.render.bind(this));
+  }
+
+  _setupControls() {
+    new OrbitControls(this._camera, this._divContainer);
   }
 
   _setupCamera() {
@@ -44,14 +51,19 @@ class App {
   }
 
   _setupModel() {
-    // 파란색 정육면체 메쉬를 생성. geometry 객체 + material 객체
-    const geometry = new THREE.BoxGeometry(1, 1, 1); // 정육면체 형상 정의, 가로, 세로, 깊이 지정
-    const material = new THREE.MeshPhongMaterial({ color: 0x44a88 });
+    const rawPositions = [-1 - 1, 0, 1, -1, 0, -1, 1, 0, 1, 1, 0];
 
-    const cube = new THREE.Mesh(geometry, material);
+    const positions = new Float32Array(rawPositions);
+    const geometry = new THREE.BufferGeometry();
 
-    this._scene.add(cube);
-    this._cube = cube;
+    geometry.setAttribute("poisition", new THREE.BufferAttribute(positions, 3)); // 하나의 정점이 (x, y, z) 3개의 항목으로 구성됨
+    // Vertex index 지정. 정점의 배치 순서가 반시계 방향이어여야 한다
+    geometry.setIndex([0, 1, 2, 2, 1, 3]);
+
+    const material = new THREE.MeshPhongMaterial({ color: 0xff0000 });
+    const box = new THREE.Mesh(geometry, material);
+    this._scene.add(box);
+
   }
 
   resize() {
