@@ -114,16 +114,14 @@ class App {
   }
 
   _setupLight() {
-    // const light = new THREE.AmbientLight(0xffffff, 5);
-    // const light = new THREE.HemisphereLight('#b0d8f5','#bb7a1c', 1);
-    const light = new THREE.DirectionalLight(0xffffff, 1);
+    const light = new THREE.PointLight(0xffffff, 2);
     light.position.set(0, 5, 0);
-    light.target.position.set(0, 0, 0);
-    this._scene.add(light.target);
+    light.distance = 5;
 
-    const helper = new THREE.DirectionalLightHelper(light);
+    const helper = new THREE.PointLightHelper(light);
     this._scene.add(helper);
     this._lightHelper = helper;
+
     this._scene.add(light);
     this._light = light;
   }
@@ -165,9 +163,9 @@ class App {
     if (smallShperePivot) {
       smallShperePivot.rotation.y = THREE.MathUtils.degToRad(time * 50);
 
-      if (this._light.target) {
+      if (this._light) {
         const smallShpere = smallShperePivot.children[0];
-        smallShpere.getWorldPosition(this._light.target.position);
+        smallShpere.getWorldPosition(this._light.position);
         // smallSphere의 world 좌표계의 위치를 구해서 광원의 target 위치에 지정
 
         if (this._lightHelper) this._lightHelper.update();
