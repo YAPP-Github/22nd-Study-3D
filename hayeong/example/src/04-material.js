@@ -55,7 +55,7 @@ class App {
     const textureLoader = new THREE.TextureLoader();
     const map = textureLoader.load('/assets/images/glass/Glass_Window_002_basecolor.jpg')
     const mapAO = textureLoader.load('/assets/images/glass/Glass_Window_002_ambientOcclusion.jpg')
-    const mapHeight = textureLoader.load('/assets/images/glass/Glass_Window_002_height.jpg')
+    const mapHeight = textureLoader.load('/assets/images/glass/Glass_Window_002_height.png')
     const mapNormal = textureLoader.load('/assets/images/glass/Glass_Window_002_normal.jpg')
     const mapRoughness = textureLoader.load('/assets/images/glass/Glass_Window_002_roughness.jpg')
     const mapMetalic = textureLoader.load('/assets/images/glass/Glass_Window_002_metallic.jpg')
@@ -63,23 +63,21 @@ class App {
 
     const material = new THREE.MeshStandardMaterial({
       // map,
-      normalMap: mapNormal
+      normalMap: mapNormal,
+
+      displacementMap: mapHeight,
+      displacementScale: 0.2,
+      displacementBias: -0.15
     });
 
 
-    const box = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), material);
+    const box = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1, 256, 256, 256), material);
     box.position.set(-1, 0, 0);
     this._scene.add(box);
 
-    const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.7, 32, 32), material);
+    const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.7, 32, 512), material);
     sphere.position.set(1, 0, 0);
     this._scene.add(sphere);
-
-    // 법선벡터 시각화
-    const boxHelper = new VertexNormalsHelper(box, 0.1, 0xffff00)
-    this._scene.add(boxHelper)
-    const sphereHelper = new VertexNormalsHelper(sphere, 0.1, 0xffff00)
-    this._scene.add(sphereHelper)
   }
 
   resize() {
