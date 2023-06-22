@@ -51,7 +51,12 @@ class App {
   }
 
   _setupModel() {
-    const rawPositions = [-1, -1, 0, 1, -1, 0, -1, 1, 0, 1, 1, 0];
+    const rawPositions = [
+      -1, -1, 0,
+      1, -1, 0,
+      -1, 1, 0,
+      1, 1, 0,
+    ];
 
     const positions = new Float32Array(rawPositions);
 
@@ -68,11 +73,21 @@ class App {
     ];
     const colors = new Float32Array(rawColors);
 
+    // 텍스쳐 맵핑
+    const rawUvs = [
+      0, 0,
+      1, 0,
+      0, 1,
+      1, 1,
+    ];
+    const uvs = new Float32Array(rawUvs);
+
     const geometry = new THREE.BufferGeometry();
 
     geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3)); // 하나의 정점이 (x, y, z) 3개의 항목으로 구성됨
     geometry.setAttribute("normal", new THREE.BufferAttribute(normals, 3));
     geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+    geometry.setAttribute("uv", new THREE.BufferAttribute(uvs, 2));
 
     // Vertex index 지정. 정점의 배치 순서가 반시계 방향이어여야 한다
     geometry.setIndex([0, 1, 2, 2, 1, 3]);
@@ -80,7 +95,10 @@ class App {
     // 모든 정점에 대해 법선 벡터를 자동으로 지정
     // geometry.computeVertexNormals()
 
-    const material = new THREE.MeshPhongMaterial({ color: 0xffffff, vertexColors: true });
+    const textureLoader = new THREE.TextureLoader();
+    const map = textureLoader.load("/assets/uv_grid_opengl.jpg");
+
+    const material = new THREE.MeshPhongMaterial({ color: 0xffffff, map });
     const box = new THREE.Mesh(geometry, material);
     console.log('🔸 → App → _setupModel → box:', box);
     
@@ -113,8 +131,6 @@ class App {
 
   update(time) {
     time *= 0.001; // ms -> s
-
-    // 시간은 계속 변하므로 큐브가 계속 회전함
   }
 }
 
