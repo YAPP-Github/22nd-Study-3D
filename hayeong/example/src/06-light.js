@@ -36,7 +36,9 @@ class App {
     const width = this._divContainer.clientWidth;
     const height = this._divContainer.clientHeight;
     const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 100);
-    camera.position.z = 2;
+    // camera.position.z = 2;
+    camera.position.set(7, 7, 20);
+    camera.lookAt(0, 0, 0);
     this._camera = camera;
   }
 
@@ -105,13 +107,18 @@ class App {
   _setSmallShperePivot() {
     const spherePivot = new THREE.Object3D();
     const smallShpere = this._getSmallShpereMesh();
+    smallShpere.position.set(3, 0.5, 0);
     spherePivot.add(smallShpere);
     spherePivot.name = "smallShperePivot"; // 이름으로 scene에서 언제든 조회할 수 있음
-    smallShpere.position.set(3, 0.5, 0);
     this._scene.add(spherePivot);
   }
 
-  _setupLight() {}
+  _setupLight() {
+    const light = new THREE.AmbientLight(0xffffff, 5);
+
+    this._scene.add(light);
+    this._light = light;
+  }
 
   _setupModel() {
     const ground = this._getGroundMesh();
@@ -145,6 +152,11 @@ class App {
 
   update(time) {
     time *= 0.001; // ms -> s
+    
+    const smallShperePivot = this._scene.getObjectByName("smallShperePivot")
+    if(smallShperePivot) {
+      smallShperePivot.rotation.y = THREE.MathUtils.degToRad(time * 50)
+    }
   }
 }
 
