@@ -79,7 +79,11 @@ class App {
       roughness: 0.5,
 
       metalnessMap: mapMetalic,
-      metalness: 0.9,
+      metalness: 0.5,
+
+      alphaMap: mapAlpha,
+      transparent: true,
+      side: THREE.DoubleSide,
     });
 
     const box = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1, 256, 256, 256), material);
