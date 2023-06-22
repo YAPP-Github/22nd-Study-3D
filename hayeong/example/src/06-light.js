@@ -41,23 +41,11 @@ class App {
   }
 
   _setupLight() {
-    // 광원 생성 시 광원의 색상과 세기, 위치 값이 필요
-    const color = 0xffffff;
-    const intensity = 1;
-    const light = new THREE.DirectionalLight(color, intensity);
-    light.position.set(-1, 2, 4);
-    this._scene.add(light);
+
   }
 
   _setupModel() {
-    // 파란색 정육면체 메쉬를 생성. geometry 객체 + material 객체
-    const geometry = new THREE.BoxGeometry(1, 1, 1); // 정육면체 형상 정의, 가로, 세로, 깊이 지정
-    const material = new THREE.MeshPhongMaterial({ color: 0x44a88 });
 
-    const cube = new THREE.Mesh(geometry, material);
-
-    this._scene.add(cube);
-    this._cube = cube;
   }
 
   resize() {
@@ -82,9 +70,6 @@ class App {
 
   update(time) {
     time *= 0.001; // ms -> s
-    this._cube.rotation.x = time;
-    this._cube.rotation.y = time;
-    // 시간은 계속 변하므로 큐브가 계속 회전함
   }
 }
 
