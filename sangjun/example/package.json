@@ -8,6 +8,7 @@
   "devDependencies": {
     "@types/three": "^0.152.0",
     "css-loader": "^6.7.4",
+    "file-loader": "^6.2.0",
     "pnp-webpack-plugin": "^1.7.0",
     "style-loader": "^3.3.3",
     "ts-loader": "^9.4.3",
