@@ -1,8 +1,6 @@
 import * as THREE from "three";
 // import { Vector3 } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { FontLoader } from "three/examples/jsm/loaders/FontLoader.js"
-import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry.js"
 
 
 class App {
@@ -10,7 +8,9 @@ class App {
   private _renderer: THREE.WebGLRenderer;
   private _scene: THREE.Scene;
   private _camera!: THREE.PerspectiveCamera;
-  private _cube!: THREE.Mesh | THREE.Group;
+  private _solarSystem: THREE.Object3D<THREE.Event>;
+  private _earthOrbit: THREE.Object3D<THREE.Event>;
+  private _moonOrbit: THREE.Object3D<THREE.Event>;
 
   constructor() {
     const divContainer = document.querySelector("#webgl-container") as HTMLElement;
@@ -25,11 +25,14 @@ class App {
     const scene = new THREE.Scene();
     this._scene = scene;
 
+    this._solarSystem = new THREE.Object3D();
+    this._earthOrbit = new THREE.Object3D();
+    this._moonOrbit = new THREE.Object3D();
+
     this._setupCamera();
     this._setupLight();
     this._setupModel();
     this._setupControls();
-
     window.onresize = this.resize.bind(this);
     this.resize();
 
@@ -40,7 +43,7 @@ class App {
     const width = this._divContainer.clientWidth;
     const height = this._divContainer.clientHeight;
     const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 100);
-    camera.position.z = 10;
+    camera.position.z = 50;
     this._camera = camera;
   }
 
@@ -53,41 +56,38 @@ class App {
   }
 
   private _setupModel() {
-    const fontLoader = new FontLoader();
-    async function loadFonts(that: any) {
-      const url = "../examples/fonts/Pretendard-Regular";
-      const font = await new Promise<any>((resolve, reject) => {
-        fontLoader.load(url, resolve, undefined, reject);
-      })
+    const solarSystem = new THREE.Object3D();
+    this._scene.add(solarSystem);
 
-      const geometry = new TextGeometry("test", {
-        font: font,
-        size: 5,
-        height: 1,
-        curveSegments: 4,
-        bevelEnabled: true,
-        bevelThickness: 0.5,
-        bevelSize: .5,
-        bevelOffset: 0,
-        bevelSegments: 2
-      })
+    const radius = 1;
+    const widthSegments = 12;
+    const heightSegments = 12;
+    const sphereGeometry = new THREE.SphereGeometry(radius, widthSegments, heightSegments);
+
+    const sunMat = new THREE.MeshPhongMaterial({ emissive: 0xffff00, flatShading: true });
+    const sunMesh = new THREE.Mesh(sphereGeometry, sunMat);
+    sunMesh.scale.set(3, 3, 3);
+    solarSystem.add(sunMesh);
 
 
-      const material = new THREE.MeshPhongMaterial({ color: 0x515151 });
-      const cube = new THREE.Mesh(geometry, material);
+    const earthOrbit = new THREE.Object3D();
+    const earthMat = new THREE.MeshPhongMaterial({ color: 0x2233ff, emissive: 0x112244, flatShading: true });
+    const earthMesh = new THREE.Mesh(sphereGeometry, earthMat);
+    earthMesh.scale.set(1, 1, 1);
+    earthOrbit.position.x = 10;
+    earthOrbit.add(earthMesh);
+    solarSystem.add(earthOrbit);
 
-      const lineMaterial = new THREE.LineBasicMaterial({ color: 0xffffff });
-      const line = new THREE.LineSegments(new THREE.WireframeGeometry(geometry), lineMaterial);
+    const moonOrbit = new THREE.Object3D();
+    const moonMat = new THREE.MeshPhongMaterial({ color: 0xffffff, flatShading: true });
+    const moonMesh = new THREE.Mesh(sphereGeometry, moonMat);
+    moonMesh.scale.set(0.5, 0.5, 0.5);
+    moonMesh.position.x = 2;
+    moonOrbit.add(moonMesh);
 
-      const group = new THREE.Group()
-      group.add(cube);
-      group.add(line);
-
-      that._scene.add(group);
-      that._cube = group;
-    }
-
-    loadFonts(this);
+    this._solarSystem = solarSystem;
+    this._earthOrbit = earthOrbit;
+    this._moonOrbit = moonOrbit;
   }
 
   private _setupControls() {
@@ -104,15 +104,18 @@ class App {
     this._renderer.setSize(width, height);
   }
 
-  render() {
-    this._renderer.render(this._scene, this._camera);
-    // this.update(time);
-    requestAnimationFrame(this.render.bind(this));
+  update(time: number) {
+    time *= 0.001; // secondunit
+    this._solarSystem.rotation.y = time / 2;
+    this._earthOrbit.rotation.y = time / 2;
+    this._moonOrbit.rotation.y = time / 4;
   }
 
-  // update(time: number) {
-  //   time *= 0.0001; // secondunit
-  // }
+  render(time: number) {
+    this._renderer.render(this._scene, this._camera);
+    this.update(time);
+    requestAnimationFrame(this.render.bind(this));
+  }
 }
 
 window.onload = function () {

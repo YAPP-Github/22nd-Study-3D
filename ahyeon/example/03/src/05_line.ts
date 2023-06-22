@@ -1,8 +1,6 @@
 import * as THREE from "three";
 // import { Vector3 } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { FontLoader } from "three/examples/jsm/loaders/FontLoader.js"
-import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry.js"
 
 
 class App {
@@ -10,7 +8,6 @@ class App {
   private _renderer: THREE.WebGLRenderer;
   private _scene: THREE.Scene;
   private _camera!: THREE.PerspectiveCamera;
-  private _cube!: THREE.Mesh | THREE.Group;
 
   constructor() {
     const divContainer = document.querySelector("#webgl-container") as HTMLElement;
@@ -29,7 +26,6 @@ class App {
     this._setupLight();
     this._setupModel();
     this._setupControls();
-
     window.onresize = this.resize.bind(this);
     this.resize();
 
@@ -40,7 +36,7 @@ class App {
     const width = this._divContainer.clientWidth;
     const height = this._divContainer.clientHeight;
     const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 100);
-    camera.position.z = 10;
+    camera.position.z = 50;
     this._camera = camera;
   }
 
@@ -53,41 +49,32 @@ class App {
   }
 
   private _setupModel() {
-    const fontLoader = new FontLoader();
-    async function loadFonts(that: any) {
-      const url = "../examples/fonts/Pretendard-Regular";
-      const font = await new Promise<any>((resolve, reject) => {
-        fontLoader.load(url, resolve, undefined, reject);
-      })
+    const v: number[] = [];
+    for (let i = 0; i < 1000; i++) {
+      const x = THREE.MathUtils.randFloatSpread(5);
+      const y = THREE.MathUtils.randFloatSpread(5);
+      const z = THREE.MathUtils.randFloatSpread(5);
 
-      const geometry = new TextGeometry("test", {
-        font: font,
-        size: 5,
-        height: 1,
-        curveSegments: 4,
-        bevelEnabled: true,
-        bevelThickness: 0.5,
-        bevelSize: .5,
-        bevelOffset: 0,
-        bevelSegments: 2
-      })
-
-
-      const material = new THREE.MeshPhongMaterial({ color: 0x515151 });
-      const cube = new THREE.Mesh(geometry, material);
-
-      const lineMaterial = new THREE.LineBasicMaterial({ color: 0xffffff });
-      const line = new THREE.LineSegments(new THREE.WireframeGeometry(geometry), lineMaterial);
-
-      const group = new THREE.Group()
-      group.add(cube);
-      group.add(line);
-
-      that._scene.add(group);
-      that._cube = group;
+      v.push(x, y, z);
     }
 
-    loadFonts(this);
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute("position", new THREE.Float32BufferAttribute(v, 3))
+
+    const sprite = new THREE.TextureLoader().load(
+      "../examples/textures/sprites/disc.png"
+    );
+
+    const mat = new THREE.PointsMaterial({
+      map: sprite,
+      alphaTest: 0.5, // pt의 alpha값이 이보다 클때만 픽셀이 렌더링된다. 
+      color: 0xff00ff,
+      size: 5,
+      sizeAttenuation: false
+    })
+
+    const pt = new THREE.Points(geo, mat)
+    this._scene.add(pt)
   }
 
   private _setupControls() {
@@ -104,15 +91,15 @@ class App {
     this._renderer.setSize(width, height);
   }
 
-  render() {
+  // update(time: number) {
+  //   time *= 0.001; // secondunit 
+  // }
+
+  render(time: number) {
     this._renderer.render(this._scene, this._camera);
     // this.update(time);
     requestAnimationFrame(this.render.bind(this));
   }
-
-  // update(time: number) {
-  //   time *= 0.0001; // secondunit
-  // }
 }
 
 window.onload = function () {
