@@ -38,6 +38,7 @@ class App {
     const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 100);
     camera.position.z = 3;
     this._camera = camera;
+    this._scene.add(camera) // 광원이 카메라와 함께 이동하도록 설정
   }
 
   _setupLight() {
@@ -46,40 +47,22 @@ class App {
     const intensity = 1;
     const light = new THREE.DirectionalLight(color, intensity);
     light.position.set(-1, 2, 4);
-    this._scene.add(light);
+    // this._scene.add(light);
+    this._camera.add(light) // 광원이 카메라와 함께 이동하도록 설정
   }
 
   _setupModel() {
     const textureLoader = new THREE.TextureLoader();
-    const map = textureLoader.load(
-      '/assets/uv_grid_opengl.jpg',
-      texture => {
-        // texture의 반복수
-        texture.repeat.x = 2
-        texture.repeat.y = 2
-
-        // texture를 어떻게 반복할 것인지 지정
-        texture.wrapS = THREE.RepeatWrapping
-        texture.wrapT = THREE.RepeatWrapping
-        // texture.wrapT = THREE.ClampToEdgeWrapping
-        // texture.wrapT = THREE.MirroredRepeatWrapping
-
-        // uv 좌표의 시작 위치 조정
-        texture.offset.x = 0
-        texture.offset.y = 0
-
-        // 이미지를 회전시켜서 맵핑. center로 회전 기준을 지정할 수 있음
-        texture.rotation = THREE.MathUtils.degToRad(45)
-        texture.center.x = 0.5
-        texture.center.y = 0.5
-
-        texture.magFilter = THREE.NearestFilter
-        texture.minFilter = THREE.NearestMipmapLinearFilter
-      }
-    )
+    const map = textureLoader.load('/assets/images/glass/Glass_Window_002_basecolor.jpg')
+    const mapAO = textureLoader.load('/assets/images/glass/Glass_Window_002_ambientOcclusion.jpg')
+    const mapHeight = textureLoader.load('/assets/images/glass/Glass_Window_002_height.jpg')
+    const mapNormal = textureLoader.load('/assets/images/glass/Glass_Window_002_normal.jpg')
+    const mapRoughness = textureLoader.load('/assets/images/glass/Glass_Window_002_roughness.jpg')
+    const mapMetalic = textureLoader.load('/assets/images/glass/Glass_Window_002_metallic.jpg')
+    const mapAlpha = textureLoader.load('/assets/images/glass/Glass_Window_002_opacity.jpg')
 
     const material = new THREE.MeshStandardMaterial({
-      map
+      map,
     });
 
 
