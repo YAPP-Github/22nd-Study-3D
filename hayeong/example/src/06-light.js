@@ -40,12 +40,87 @@ class App {
     this._camera = camera;
   }
 
-  _setupLight() {
+  _getGroundMesh() {
+    const geometry = new THREE.PlaneGeometry(10, 10);
+    const material = new THREE.MeshStandardMaterial({
+      color: "#2c3e50",
+      roughness: 0.5,
+      metalness: 0.5,
+      side: THREE.DoubleSide,
+    });
 
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.rotation.x = THREE.MathUtils.degToRad(-90);
+    return mesh;
   }
 
-  _setupModel() {
+  _getBigSphereMesh() {
+    const geometry = new THREE.SphereGeometry(1.5, 64, 64, 0, Math.PI);
+    const material = new THREE.MeshStandardMaterial({
+      color: "#ffffff",
+      roughness: 0.1,
+      metalness: 0.2,
+    });
 
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.rotation.x = THREE.MathUtils.degToRad(-90);
+    return mesh;
+  }
+
+  _getTorusMesh() {
+    const geometry = new THREE.TorusGeometry(0.4, 0.1, 32, 32);
+    const material = new THREE.MeshStandardMaterial({
+      color: "#9b59b6",
+      roughness: 0.5,
+      metalness: 0.9,
+    });
+
+    const mesh = new THREE.Mesh(geometry, material);
+    return mesh;
+  }
+
+  _getSmallShpereMesh() {
+    const geometry = new THREE.SphereGeometry(0.3, 32, 32);
+    const material = new THREE.MeshStandardMaterial({
+      color: "#e74c3c",
+      roughness: 0.2,
+      metalness: 0.5,
+    });
+
+    const mesh = new THREE.Mesh(geometry, material);
+    return mesh;
+  }
+
+  _setTorusPivot() {
+    for (let i = 0; i < 8; i++) {
+      const torusPivot = new THREE.Object3D();
+      torusPivot.rotation.y = THREE.MathUtils.degToRad(45 * i);
+      const torus = this._getTorusMesh();
+      torus.position.set(3, 0.5, 0);
+      torusPivot.add(torus);
+      this._scene.add(torusPivot);
+    }
+  }
+
+  _setSmallShperePivot() {
+    const spherePivot = new THREE.Object3D();
+    const smallShpere = this._getSmallShpereMesh();
+    spherePivot.add(smallShpere);
+    spherePivot.name = "smallShperePivot"; // 이름으로 scene에서 언제든 조회할 수 있음
+    smallShpere.position.set(3, 0.5, 0);
+    this._scene.add(spherePivot);
+  }
+
+  _setupLight() {}
+
+  _setupModel() {
+    const ground = this._getGroundMesh();
+    this._scene.add(ground);
+    const bigSphere = this._getBigSphereMesh();
+    this._scene.add(bigSphere);
+
+    this._setTorusPivot();
+    this._setSmallShperePivot();
   }
 
   resize() {
