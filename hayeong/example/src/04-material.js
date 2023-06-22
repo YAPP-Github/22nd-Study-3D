@@ -42,6 +42,9 @@ class App {
   }
 
   _setupLight() {
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.2)
+    this._scene.add(ambientLight)
+    
     // 광원 생성 시 광원의 색상과 세기, 위치 값이 필요
     const color = 0xffffff;
     const intensity = 1;
@@ -62,12 +65,15 @@ class App {
     const mapAlpha = textureLoader.load('/assets/images/glass/Glass_Window_002_opacity.jpg')
 
     const material = new THREE.MeshStandardMaterial({
-      // map,
+      map,
       normalMap: mapNormal,
 
       displacementMap: mapHeight,
       displacementScale: 0.2,
-      displacementBias: -0.15
+      displacementBias: -0.15,
+
+      aoMap: mapAO,
+      aoMapIntensity: 1
     });
 
 
@@ -78,6 +84,10 @@ class App {
     const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.7, 32, 512), material);
     sphere.position.set(1, 0, 0);
     this._scene.add(sphere);
+
+    // aoMap을 위한 속성 지정
+    box.geometry.attributes.uv2 = box.geometry.attributes.uv
+    sphere.geometry.attributes.uv2 = sphere.geometry.attributes.uv
   }
 
   resize() {
