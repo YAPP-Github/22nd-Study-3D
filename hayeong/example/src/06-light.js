@@ -115,8 +115,15 @@ class App {
 
   _setupLight() {
     // const light = new THREE.AmbientLight(0xffffff, 5);
-    const light = new THREE.HemisphereLight('#b0d8f5','#bb7a1c', 1);
+    // const light = new THREE.HemisphereLight('#b0d8f5','#bb7a1c', 1);
+    const light = new THREE.DirectionalLight(0xffffff, 1);
+    light.position.set(0, 5, 0);
+    light.target.position.set(0, 0, 0);
+    this._scene.add(light.target);
 
+    const helper = new THREE.DirectionalLightHelper(light);
+    this._scene.add(helper);
+    this._lightHelper = helper;
     this._scene.add(light);
     this._light = light;
   }
