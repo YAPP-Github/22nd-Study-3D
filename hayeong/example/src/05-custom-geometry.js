@@ -51,7 +51,7 @@ class App {
   }
 
   _setupModel() {
-    const rawPositions = [-1 - 1, 0, 1, -1, 0, -1, 1, 0, 1, 1, 0];
+    const rawPositions = [-1, -1, 0, 1, -1, 0, -1, 1, 0, 1, 1, 0];
 
     const positions = new Float32Array(rawPositions);
 
@@ -69,8 +69,8 @@ class App {
     const colors = new Float32Array(rawColors);
 
     const geometry = new THREE.BufferGeometry();
-    
-    geometry.setAttribute("poisition", new THREE.BufferAttribute(positions, 3)); // 하나의 정점이 (x, y, z) 3개의 항목으로 구성됨
+
+    geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3)); // 하나의 정점이 (x, y, z) 3개의 항목으로 구성됨
     geometry.setAttribute("normal", new THREE.BufferAttribute(normals, 3));
     geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
 
