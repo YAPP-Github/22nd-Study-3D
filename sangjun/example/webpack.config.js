@@ -20,6 +20,10 @@ module.exports = (env) => {
           test: /\.ts/,
           use: "ts-loader",
         },
+        {
+          test: /\.(png|svg|jpg|jpeg|gif)$/i,
+          use: ["file-loader"],
+        },
       ],
     },
     devServer: {

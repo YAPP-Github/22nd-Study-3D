@@ -1190,6 +1190,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["big.js", [\
+        ["npm:5.2.2", {\
+          "packageLocation": "./.yarn/cache/big.js-npm-5.2.2-e147c30820-b89b6e8419.zip/node_modules/big.js/",\
+          "packageDependencies": [\
+            ["big.js", "npm:5.2.2"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["binary-extensions", [\
         ["npm:2.2.0", {\
           "packageLocation": "./.yarn/cache/binary-extensions-npm-2.2.0-180c33fec7-ccd267956c.zip/node_modules/binary-extensions/",\
@@ -1811,6 +1820,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["emojis-list", [\
+        ["npm:3.0.0", {\
+          "packageLocation": "./.yarn/cache/emojis-list-npm-3.0.0-7faa48e6fd-ddaaa02542.zip/node_modules/emojis-list/",\
+          "packageDependencies": [\
+            ["emojis-list", "npm:3.0.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["encodeurl", [\
         ["npm:1.0.2", {\
           "packageLocation": "./.yarn/cache/encodeurl-npm-1.0.2-f8c8454c41-e50e3d508c.zip/node_modules/encodeurl/",\
@@ -2068,6 +2086,30 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/fflate-npm-0.6.10-b727a5dabe-96384bc409.zip/node_modules/fflate/",\
           "packageDependencies": [\
             ["fflate", "npm:0.6.10"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["file-loader", [\
+        ["npm:6.2.0", {\
+          "packageLocation": "./.yarn/cache/file-loader-npm-6.2.0-4b02fd87d5-faf43eecf2.zip/node_modules/file-loader/",\
+          "packageDependencies": [\
+            ["file-loader", "npm:6.2.0"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:d0e5eab61c6129e7e0b489dc5d304febdba5c67b350065cf1de07da7afe7ef4da0a156b55efabed0ae36d9c84dd73e9afc43fbb1ba91b625581bb07ab67d84b3#npm:6.2.0", {\
+          "packageLocation": "./.yarn/__virtual__/file-loader-virtual-f247218a9a/0/cache/file-loader-npm-6.2.0-4b02fd87d5-faf43eecf2.zip/node_modules/file-loader/",\
+          "packageDependencies": [\
+            ["file-loader", "virtual:d0e5eab61c6129e7e0b489dc5d304febdba5c67b350065cf1de07da7afe7ef4da0a156b55efabed0ae36d9c84dd73e9afc43fbb1ba91b625581bb07ab67d84b3#npm:6.2.0"],\
+            ["@types/webpack", null],\
+            ["loader-utils", "npm:2.0.4"],\
+            ["schema-utils", "npm:3.2.0"],\
+            ["webpack", "virtual:d0e5eab61c6129e7e0b489dc5d304febdba5c67b350065cf1de07da7afe7ef4da0a156b55efabed0ae36d9c84dd73e9afc43fbb1ba91b625581bb07ab67d84b3#npm:5.83.1"]\
+          ],\
+          "packagePeers": [\
+            "@types/webpack",\
+            "webpack"\
           ],\
           "linkType": "HARD"\
         }]\
@@ -2833,6 +2875,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["json5", [\
+        ["npm:2.2.3", {\
+          "packageLocation": "./.yarn/cache/json5-npm-2.2.3-9962c55073-2a7436a933.zip/node_modules/json5/",\
+          "packageDependencies": [\
+            ["json5", "npm:2.2.3"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["kind-of", [\
         ["npm:6.0.3", {\
           "packageLocation": "./.yarn/cache/kind-of-npm-6.0.3-ab15f36220-3ab01e7b1d.zip/node_modules/kind-of/",\
@@ -2867,6 +2918,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/loader-runner-npm-4.3.0-9ca67df372-a90e00dee9.zip/node_modules/loader-runner/",\
           "packageDependencies": [\
             ["loader-runner", "npm:4.3.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["loader-utils", [\
+        ["npm:2.0.4", {\
+          "packageLocation": "./.yarn/cache/loader-utils-npm-2.0.4-ba3800585b-a5281f5fff.zip/node_modules/loader-utils/",\
+          "packageDependencies": [\
+            ["loader-utils", "npm:2.0.4"],\
+            ["big.js", "npm:5.2.2"],\
+            ["emojis-list", "npm:3.0.0"],\
+            ["json5", "npm:2.2.3"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -3867,6 +3930,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["sangjun", "workspace:sangjun/example"],\
             ["@types/three", "npm:0.152.0"],\
             ["css-loader", "virtual:d0e5eab61c6129e7e0b489dc5d304febdba5c67b350065cf1de07da7afe7ef4da0a156b55efabed0ae36d9c84dd73e9afc43fbb1ba91b625581bb07ab67d84b3#npm:6.7.4"],\
+            ["file-loader", "virtual:d0e5eab61c6129e7e0b489dc5d304febdba5c67b350065cf1de07da7afe7ef4da0a156b55efabed0ae36d9c84dd73e9afc43fbb1ba91b625581bb07ab67d84b3#npm:6.2.0"],\
             ["pnp-webpack-plugin", "npm:1.7.0"],\
             ["style-loader", "virtual:d0e5eab61c6129e7e0b489dc5d304febdba5c67b350065cf1de07da7afe7ef4da0a156b55efabed0ae36d9c84dd73e9afc43fbb1ba91b625581bb07ab67d84b3#npm:3.3.3"],\
             ["three", "npm:0.152.2"],\
@@ -3884,6 +3948,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/schema-utils-npm-3.1.2-d97c6dc247-39683edfe3.zip/node_modules/schema-utils/",\
           "packageDependencies": [\
             ["schema-utils", "npm:3.1.2"],\
+            ["@types/json-schema", "npm:7.0.11"],\
+            ["ajv", "npm:6.12.6"],\
+            ["ajv-keywords", "virtual:d97c6dc2470a09df291ffabfb628805522422b4f82428e8e42ce0cc9d601f6a37284e97b09b5fd9028947806f788dfbb1247f98a767c37a3ec2763f05bc38dec#npm:3.5.2"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:3.2.0", {\
+          "packageLocation": "./.yarn/cache/schema-utils-npm-3.2.0-a94d779571-e8c590c525.zip/node_modules/schema-utils/",\
+          "packageDependencies": [\
+            ["schema-utils", "npm:3.2.0"],\
             ["@types/json-schema", "npm:7.0.11"],\
             ["ajv", "npm:6.12.6"],\
             ["ajv-keywords", "virtual:d97c6dc2470a09df291ffabfb628805522422b4f82428e8e42ce0cc9d601f6a37284e97b09b5fd9028947806f788dfbb1247f98a767c37a3ec2763f05bc38dec#npm:3.5.2"]\
