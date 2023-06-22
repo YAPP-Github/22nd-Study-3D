@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "./three.js-master/examples/jsm/controls/OrbitControls";
-
+import { VertexNormalsHelper } from './three.js-master/examples/jsm/helpers/VertexNormalsHelper'
 class App {
   constructor() {
     const divContainer = document.querySelector("#webgl-container");
@@ -36,7 +36,7 @@ class App {
     const width = this._divContainer.clientWidth;
     const height = this._divContainer.clientHeight;
     const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 100);
-    camera.position.z = 3;
+    camera.position.z = 5;
     this._camera = camera;
     this._scene.add(camera) // 광원이 카메라와 함께 이동하도록 설정
   }
@@ -62,7 +62,8 @@ class App {
     const mapAlpha = textureLoader.load('/assets/images/glass/Glass_Window_002_opacity.jpg')
 
     const material = new THREE.MeshStandardMaterial({
-      map,
+      // map,
+      normalMap: mapNormal
     });
 
 
@@ -73,6 +74,12 @@ class App {
     const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.7, 32, 32), material);
     sphere.position.set(1, 0, 0);
     this._scene.add(sphere);
+
+    // 법선벡터 시각화
+    const boxHelper = new VertexNormalsHelper(box, 0.1, 0xffff00)
+    this._scene.add(boxHelper)
+    const sphereHelper = new VertexNormalsHelper(sphere, 0.1, 0xffff00)
+    this._scene.add(sphereHelper)
   }
 
   resize() {
