@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "./three.js-master/examples/jsm/controls/OrbitControls";
-import { VertexNormalsHelper } from './three.js-master/examples/jsm/helpers/VertexNormalsHelper'
+import { VertexNormalsHelper } from "./three.js-master/examples/jsm/helpers/VertexNormalsHelper";
 class App {
   constructor() {
     const divContainer = document.querySelector("#webgl-container");
@@ -38,31 +38,31 @@ class App {
     const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 100);
     camera.position.z = 5;
     this._camera = camera;
-    this._scene.add(camera) // 광원이 카메라와 함께 이동하도록 설정
+    this._scene.add(camera); // 광원이 카메라와 함께 이동하도록 설정
   }
 
   _setupLight() {
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.2)
-    this._scene.add(ambientLight)
-    
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+    this._scene.add(ambientLight);
+
     // 광원 생성 시 광원의 색상과 세기, 위치 값이 필요
     const color = 0xffffff;
     const intensity = 1;
     const light = new THREE.DirectionalLight(color, intensity);
     light.position.set(-1, 2, 4);
     // this._scene.add(light);
-    this._camera.add(light) // 광원이 카메라와 함께 이동하도록 설정
+    this._camera.add(light); // 광원이 카메라와 함께 이동하도록 설정
   }
 
   _setupModel() {
     const textureLoader = new THREE.TextureLoader();
-    const map = textureLoader.load('/assets/images/glass/Glass_Window_002_basecolor.jpg')
-    const mapAO = textureLoader.load('/assets/images/glass/Glass_Window_002_ambientOcclusion.jpg')
-    const mapHeight = textureLoader.load('/assets/images/glass/Glass_Window_002_height.png')
-    const mapNormal = textureLoader.load('/assets/images/glass/Glass_Window_002_normal.jpg')
-    const mapRoughness = textureLoader.load('/assets/images/glass/Glass_Window_002_roughness.jpg')
-    const mapMetalic = textureLoader.load('/assets/images/glass/Glass_Window_002_metallic.jpg')
-    const mapAlpha = textureLoader.load('/assets/images/glass/Glass_Window_002_opacity.jpg')
+    const map = textureLoader.load("/assets/images/glass/Glass_Window_002_basecolor.jpg");
+    const mapAO = textureLoader.load("/assets/images/glass/Glass_Window_002_ambientOcclusion.jpg");
+    const mapHeight = textureLoader.load("/assets/images/glass/Glass_Window_002_height.png");
+    const mapNormal = textureLoader.load("/assets/images/glass/Glass_Window_002_normal.jpg");
+    const mapRoughness = textureLoader.load("/assets/images/glass/Glass_Window_002_roughness.jpg");
+    const mapMetalic = textureLoader.load("/assets/images/glass/Glass_Window_002_metallic.jpg");
+    const mapAlpha = textureLoader.load("/assets/images/glass/Glass_Window_002_opacity.jpg");
 
     const material = new THREE.MeshStandardMaterial({
       map,
@@ -73,9 +73,8 @@ class App {
       displacementBias: -0.15,
 
       aoMap: mapAO,
-      aoMapIntensity: 1
+      aoMapIntensity: 1,
     });
-
 
     const box = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1, 256, 256, 256), material);
     box.position.set(-1, 0, 0);
@@ -86,8 +85,8 @@ class App {
     this._scene.add(sphere);
 
     // aoMap을 위한 속성 지정
-    box.geometry.attributes.uv2 = box.geometry.attributes.uv
-    sphere.geometry.attributes.uv2 = sphere.geometry.attributes.uv
+    box.geometry.attributes.uv2 = box.geometry.attributes.uv;
+    sphere.geometry.attributes.uv2 = sphere.geometry.attributes.uv;
   }
 
   resize() {
