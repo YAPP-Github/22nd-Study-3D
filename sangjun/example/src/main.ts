@@ -1,7 +1,7 @@
-import customGeometry from "./week4/customGeometry";
+import Light from "./week4/light";
 
 import "./style.css";
 
 window.onload = () => {
-  new customGeometry();
+  new Light();
 };
