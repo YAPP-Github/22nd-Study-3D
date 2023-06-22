@@ -160,10 +160,18 @@ class App {
 
   update(time) {
     time *= 0.001; // ms -> s
-    
-    const smallShperePivot = this._scene.getObjectByName("smallShperePivot")
-    if(smallShperePivot) {
-      smallShperePivot.rotation.y = THREE.MathUtils.degToRad(time * 50)
+
+    const smallShperePivot = this._scene.getObjectByName("smallShperePivot");
+    if (smallShperePivot) {
+      smallShperePivot.rotation.y = THREE.MathUtils.degToRad(time * 50);
+
+      if (this._light.target) {
+        const smallShpere = smallShperePivot.children[0];
+        smallShpere.getWorldPosition(this._light.target.position);
+        // smallSphere의 world 좌표계의 위치를 구해서 광원의 target 위치에 지정
+
+        if (this._lightHelper) this._lightHelper.update();
+      }
     }
   }
 }
