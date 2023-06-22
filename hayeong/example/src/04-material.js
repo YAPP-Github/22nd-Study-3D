@@ -74,6 +74,12 @@ class App {
 
       aoMap: mapAO,
       aoMapIntensity: 1,
+
+      roughnessMap: mapRoughness,
+      roughness: 0.5,
+
+      metalnessMap: mapMetalic,
+      metalness: 0.9,
     });
 
     const box = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1, 256, 256, 256), material);
