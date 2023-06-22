@@ -114,7 +114,8 @@ class App {
   }
 
   _setupLight() {
-    const light = new THREE.AmbientLight(0xffffff, 5);
+    // const light = new THREE.AmbientLight(0xffffff, 5);
+    const light = new THREE.HemisphereLight('#b0d8f5','#bb7a1c', 1);
 
     this._scene.add(light);
     this._light = light;
