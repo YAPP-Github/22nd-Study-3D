@@ -60,16 +60,29 @@ class App {
     const rawNormals = [0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1];
     const normals = new Float32Array(rawNormals);
 
+    // 정점 색상 지정
+    const rawColors = [
+      1,0,0,
+      0,1,0,
+      0,0,1,
+      1,1,0,
+    ];
+    const colors = new Float32Array(rawColors);
+
     geometry.setAttribute("poisition", new THREE.BufferAttribute(positions, 3)); // 하나의 정점이 (x, y, z) 3개의 항목으로 구성됨
     geometry.setAttribute("normal", new THREE.BufferAttribute(normals));
+    geometry.setAttribute("color", new THREE.BufferAttribute(colors));
+
     // Vertex index 지정. 정점의 배치 순서가 반시계 방향이어여야 한다
     geometry.setIndex([0, 1, 2, 2, 1, 3]);
 
     // 모든 정점에 대해 법선 벡터를 자동으로 지정
     // geometry.computeVertexNormals()
 
-    const material = new THREE.MeshPhongMaterial({ color: 0xff0000 });
+    const material = new THREE.MeshPhongMaterial({ color: 0xffffff, vertexColors: true });
     const box = new THREE.Mesh(geometry, material);
+    console.log('🔸 → App → _setupModel → box:', box);
+    
     this._scene.add(box);
 
     // 법선벡터 시각화
