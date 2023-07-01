@@ -142,6 +142,9 @@ class App {
     light.shadow.camera.top = light.shadow.camera.right = 6;
     light.shadow.camera.bottom = light.shadow.camera.left = -6;
 
+    light.shadow.mapSize.width = light.shadow.mapSize.height = 2048;
+    light.shadow.radius = 1;
+
     const cameraHelper = new THREE.CameraHelper(light.shadow.camera);
     this._scene.add(cameraHelper);
 
