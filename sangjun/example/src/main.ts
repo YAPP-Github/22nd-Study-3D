@@ -1,7 +1,7 @@
-import Camera from "./week5/camera";
+import Shadow from "./week5/shadow";
 
 import "./style.css";
 
 window.onload = () => {
-  new Camera();
+  new Shadow();
 };
