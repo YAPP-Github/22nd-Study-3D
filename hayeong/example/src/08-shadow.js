@@ -10,6 +10,7 @@ class App {
     /* Renderer 객체 생성 */
     const renderer = new THREE.WebGLRenderer({ antialias: true }); // antialias: 3차원 장면이 렌더링될 때 오브젝트들의 경계선이 계단 현상 없이 부드럽게 표현됨
     renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.shadowMap.enabled = true; // 그림자 효과를 위한 설정
     divContainer.appendChild(renderer.domElement); // renderer.domElement: canvas 타입의 dom 객체
     this._renderer = renderer;
 
@@ -54,6 +55,8 @@ class App {
 
     const mesh = new THREE.Mesh(geometry, material);
     mesh.rotation.x = THREE.MathUtils.degToRad(-90);
+
+    mesh.receiveShadow = true;
     return mesh;
   }
 
@@ -68,6 +71,9 @@ class App {
     const mesh = new THREE.Mesh(geometry, material);
     // mesh.rotation.x = THREE.MathUtils.degToRad(-90);
     mesh.position.y = 1.6;
+
+    mesh.receiveShadow = true;
+    mesh.castShadow = true;
     return mesh;
   }
 
@@ -80,6 +86,9 @@ class App {
     });
 
     const mesh = new THREE.Mesh(geometry, material);
+
+    mesh.receiveShadow = true;
+    mesh.castShadow = true;
     return mesh;
   }
 
@@ -92,6 +101,9 @@ class App {
     });
 
     const mesh = new THREE.Mesh(geometry, material);
+
+    mesh.receiveShadow = true;
+    mesh.castShadow = true;
     return mesh;
   }
 
@@ -116,17 +128,20 @@ class App {
   }
 
   _setupLight() {
-    RectAreaLightUniformsLib.init();
-    const light = new THREE.RectAreaLight(0xffffff, 10, 2, 0.5);
-    light.position.set(0, 5, 0);
-    light.rotation.x = THREE.MathUtils.degToRad(-90);
+    const auxLight = new THREE.DirectionalLight(0xffffff, 0.5);
+    auxLight.position.set(0, 5, 0);
+    auxLight.target.position.set(0, 0, 0);
+    this._scene.add(auxLight.target);
+    this._scene.add(auxLight);
 
-    const helper = new RectAreaLightHelper(light);
-    this._scene.add(helper);
-    this._lightHelper = helper;
+    const light = new THREE.DirectionalLight(0xffffff, 0.5);
+    light.position.set(0, 5, 0);
+    light.target.position.set(0, 0, 0);
+    this._scene.add(light.target);
 
     this._scene.add(light);
     this._light = light;
+    light.castShadow = true; // 그림자 효과를 위한 설정
   }
 
   _setupModel() {
@@ -166,12 +181,11 @@ class App {
     if (smallShperePivot) {
       smallShperePivot.rotation.y = THREE.MathUtils.degToRad(time * 50);
 
-      if (this._light) {
+      if (this._light.target) {
         const smallShpere = smallShperePivot.children[0];
-        // smallShpere.getWorldPosition(this._light.target.position);
-        // // smallSphere의 world 좌표계의 위치를 구해서 광원의 target 위치에 지정
+        smallShpere.getWorldPosition(this._light.target.position);
 
-        // if (this._lightHelper) this._lightHelper.update();
+        if (this._lightHelper) this._lightHelper.update();
       }
     }
   }
