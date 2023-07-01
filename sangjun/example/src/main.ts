@@ -1,7 +1,7 @@
-import Light from "./week4/light";
+import Camera from "./week5/camera";
 
 import "./style.css";
 
 window.onload = () => {
-  new Light();
+  new Camera();
 };
