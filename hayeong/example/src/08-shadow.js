@@ -128,16 +128,14 @@ class App {
   }
 
   _setupLight() {
-    const auxLight = new THREE.DirectionalLight(0xffffff, 0.5);
+    const auxLight = new THREE.DirectionalLight(0xffffff, 0.2);
     auxLight.position.set(0, 5, 0);
     auxLight.target.position.set(0, 0, 0);
     this._scene.add(auxLight.target);
     this._scene.add(auxLight);
 
-    const light = new THREE.DirectionalLight(0xffffff, 0.5);
+    const light = new THREE.PointLight(0xffffff, 0.7);
     light.position.set(0, 5, 0);
-    light.target.position.set(0, 0, 0);
-    this._scene.add(light.target);
 
     light.shadow.camera.top = light.shadow.camera.right = 6;
     light.shadow.camera.bottom = light.shadow.camera.left = -6;
@@ -195,6 +193,12 @@ class App {
         smallShpere.getWorldPosition(this._light.target.position);
 
         if (this._lightHelper) this._lightHelper.update();
+      }
+
+      // PointLight
+      if (this._light instanceof THREE.PointLight) {
+        const smallShpere = smallShperePivot.children[0];
+        smallShpere.getWorldPosition(this._light.position);
       }
     }
   }
