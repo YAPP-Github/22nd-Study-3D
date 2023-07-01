@@ -134,11 +134,12 @@ class App {
     this._scene.add(auxLight.target);
     this._scene.add(auxLight);
 
-    const light = new THREE.PointLight(0xffffff, 0.7);
+    const light = new THREE.SpotLight(0xffffff, 1);
     light.position.set(0, 5, 0);
-
-    light.shadow.camera.top = light.shadow.camera.right = 6;
-    light.shadow.camera.bottom = light.shadow.camera.left = -6;
+    light.target.position.set(0, 0, 0);
+    light.angle = THREE.MathUtils.degToRad(30);
+    light.penumbra = 0.2;
+    this._scene.add(light.target);
 
     light.shadow.mapSize.width = light.shadow.mapSize.height = 2048;
     light.shadow.radius = 1;
