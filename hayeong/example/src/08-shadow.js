@@ -139,6 +139,12 @@ class App {
     light.target.position.set(0, 0, 0);
     this._scene.add(light.target);
 
+    light.shadow.camera.top = light.shadow.camera.right = 6;
+    light.shadow.camera.bottom = light.shadow.camera.left = -6;
+
+    const cameraHelper = new THREE.CameraHelper(light.shadow.camera);
+    this._scene.add(cameraHelper);
+
     this._scene.add(light);
     this._light = light;
     light.castShadow = true; // 그림자 효과를 위한 설정
