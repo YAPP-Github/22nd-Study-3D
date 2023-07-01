@@ -1,7 +1,7 @@
-import Light from "./week4/light";
+import Shadow from "./week5/shadow";
 
 import "./style.css";
 
 window.onload = () => {
-  new Light();
+  new Shadow();
 };
