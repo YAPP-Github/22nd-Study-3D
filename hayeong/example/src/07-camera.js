@@ -186,6 +186,10 @@ class App {
     if (smallShperePivot) {
       smallShperePivot.rotation.y = THREE.MathUtils.degToRad(time * 50);
 
+      // 카메라가 smallSpere을 따라가도록 설정
+      const smallSphere = smallShperePivot.children[0];
+      smallSphere.getWorldPosition(this._camera.position);
+
 
       if (this._light.target) {
         const smallShpere = smallShperePivot.children[0];
