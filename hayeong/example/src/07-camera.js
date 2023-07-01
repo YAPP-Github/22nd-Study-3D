@@ -47,12 +47,16 @@ class App {
     return camera;
   }
 
-  _setupCamera() {
-    // const width = this._divContainer.clientWidth;
-    // const height = this._divContainer.clientHeight;
-    // const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 100);
+  _getPerspectiveCamera() {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 100);
+    return camera
+  }
 
-    const camera = this._getOrthographicCamera();
+  _setupCamera() {
+    const camera = this._getPerspectiveCamera();
+    // const camera = this._getOrthographicCamera();
     camera.position.set(7, 7, 0);
     camera.lookAt(0, 0, 0);
     this._camera = camera;
@@ -151,6 +155,14 @@ class App {
 
     this._setTorusPivot();
     this._setSmallShperePivot();
+
+    // 카메라가 빨간색 원을 따라가도록 하기 위한 객체 추가
+    const targetPivot = new THREE.Object3D();
+    const target = new THREE.Object3D();
+    targetPivot.add(target);
+    targetPivot.name = "targetPivot";
+    target.position.set(3, 0.5, 0);
+    this._scene.add(targetPivot);
   }
 
   resize() {
@@ -190,7 +202,16 @@ class App {
       const smallSphere = smallShperePivot.children[0];
       smallSphere.getWorldPosition(this._camera.position);
 
+      const targetPivot = this._scene.getObjectByName('targetPivot');
+      if(targetPivot) {
+        targetPivot.rotation.y = THREE.MathUtils.degToRad(time * 50 + 10)
 
+        const target = targetPivot.children[0];
+        const pt = new THREE.Vector3();
+
+        target.getWorldPosition(pt);
+        this._camera.lookAt(pt)
+      }
       if (this._light.target) {
         const smallShpere = smallShperePivot.children[0];
         smallShpere.getWorldPosition(this._light.target.position);
