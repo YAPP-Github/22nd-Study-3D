@@ -10,6 +10,7 @@ module.exports = {
     "05-custom-geometry": "./src/05-custom-geometry.js",
     "06-light": "./src/06-light.js",
     "07-camera": "./src/07-camera.js",
+    "08-shadow": "./src/08-shadow.js",
   },
   output: {
     filename: "./[name].js",
