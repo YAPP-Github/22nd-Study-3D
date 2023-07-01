@@ -33,11 +33,23 @@ class App {
     new OrbitControls(this._camera, this._divContainer);
   }
 
+  _getOrthographicCamera() {
+    const aspect = window.innerWidth / window.innerHeight;
+    const camera = new THREE.OrthographicCamera(
+      -10 * aspect, 10 * aspect,  // xLeft, xRight
+      10, -10,  // yTop, yBottom
+      0.1, 100  // zNear, zFar
+    )
+    return camera
+  }
+
   _setupCamera() {
-    const width = this._divContainer.clientWidth;
-    const height = this._divContainer.clientHeight;
-    const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 100);
-    // camera.position.z = 2;
+    // const width = this._divContainer.clientWidth;
+    // const height = this._divContainer.clientHeight;
+    // const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 100);
+    
+    const camera = this._getOrthographicCamera()
+
     camera.position.set(7, 7, 20);
     camera.lookAt(0, 0, 0);
     this._camera = camera;
@@ -116,7 +128,7 @@ class App {
 
   _setupLight() {
     RectAreaLightUniformsLib.init();
-    const light = new THREE.RectAreaLight(0xffffff, 10, 2, 0.5);
+    const light = new THREE.DirectionalLight(0xffffff, 10, 2, 0.5);
     light.position.set(0, 5, 0);
     light.rotation.x = THREE.MathUtils.degToRad(-90);
 
