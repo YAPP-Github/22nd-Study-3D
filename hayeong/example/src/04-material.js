@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "./three.js-master/examples/jsm/controls/OrbitControls";
-
+import { VertexNormalsHelper } from "./three.js-master/examples/jsm/helpers/VertexNormalsHelper";
 class App {
   constructor() {
     const divContainer = document.querySelector("#webgl-container");
@@ -36,60 +36,67 @@ class App {
     const width = this._divContainer.clientWidth;
     const height = this._divContainer.clientHeight;
     const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 100);
-    camera.position.z = 3;
+    camera.position.z = 5;
     this._camera = camera;
+    this._scene.add(camera); // 광원이 카메라와 함께 이동하도록 설정
   }
 
   _setupLight() {
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+    this._scene.add(ambientLight);
+
     // 광원 생성 시 광원의 색상과 세기, 위치 값이 필요
     const color = 0xffffff;
     const intensity = 1;
     const light = new THREE.DirectionalLight(color, intensity);
     light.position.set(-1, 2, 4);
-    this._scene.add(light);
+    // this._scene.add(light);
+    this._camera.add(light); // 광원이 카메라와 함께 이동하도록 설정
   }
 
   _setupModel() {
     const textureLoader = new THREE.TextureLoader();
-    const map = textureLoader.load(
-      '/assets/uv_grid_opengl.jpg',
-      texture => {
-        // texture의 반복수
-        texture.repeat.x = 2
-        texture.repeat.y = 2
-
-        // texture를 어떻게 반복할 것인지 지정
-        texture.wrapS = THREE.RepeatWrapping
-        texture.wrapT = THREE.RepeatWrapping
-        // texture.wrapT = THREE.ClampToEdgeWrapping
-        // texture.wrapT = THREE.MirroredRepeatWrapping
-
-        // uv 좌표의 시작 위치 조정
-        texture.offset.x = 0
-        texture.offset.y = 0
-
-        // 이미지를 회전시켜서 맵핑. center로 회전 기준을 지정할 수 있음
-        texture.rotation = THREE.MathUtils.degToRad(45)
-        texture.center.x = 0.5
-        texture.center.y = 0.5
-
-        texture.magFilter = THREE.NearestFilter
-        texture.minFilter = THREE.NearestMipmapLinearFilter
-      }
-    )
+    const map = textureLoader.load("/assets/images/glass/Glass_Window_002_basecolor.jpg");
+    const mapAO = textureLoader.load("/assets/images/glass/Glass_Window_002_ambientOcclusion.jpg");
+    const mapHeight = textureLoader.load("/assets/images/glass/Glass_Window_002_height.png");
+    const mapNormal = textureLoader.load("/assets/images/glass/Glass_Window_002_normal.jpg");
+    const mapRoughness = textureLoader.load("/assets/images/glass/Glass_Window_002_roughness.jpg");
+    const mapMetalic = textureLoader.load("/assets/images/glass/Glass_Window_002_metallic.jpg");
+    const mapAlpha = textureLoader.load("/assets/images/glass/Glass_Window_002_opacity.jpg");
 
     const material = new THREE.MeshStandardMaterial({
-      map
+      map,
+      normalMap: mapNormal,
+
+      displacementMap: mapHeight,
+      displacementScale: 0.2,
+      displacementBias: -0.15,
+
+      aoMap: mapAO,
+      aoMapIntensity: 1,
+
+      roughnessMap: mapRoughness,
+      roughness: 0.5,
+
+      metalnessMap: mapMetalic,
+      metalness: 0.5,
+
+      alphaMap: mapAlpha,
+      transparent: true,
+      side: THREE.DoubleSide,
     });
 
-
-    const box = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), material);
+    const box = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1, 256, 256, 256), material);
     box.position.set(-1, 0, 0);
     this._scene.add(box);
 
-    const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.7, 32, 32), material);
+    const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.7, 32, 512), material);
     sphere.position.set(1, 0, 0);
     this._scene.add(sphere);
+
+    // aoMap을 위한 속성 지정
+    box.geometry.attributes.uv2 = box.geometry.attributes.uv;
+    sphere.geometry.attributes.uv2 = sphere.geometry.attributes.uv;
   }
 
   resize() {

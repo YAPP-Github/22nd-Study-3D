@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { VertexNormalsHelper } from "./three.js-master/examples/jsm/helpers/VertexNormalsHelper";
 import { OrbitControls } from "./three.js-master/examples/jsm/controls/OrbitControls";
 
 class App {
@@ -50,14 +51,62 @@ class App {
   }
 
   _setupModel() {
-    // 파란색 정육면체 메쉬를 생성. geometry 객체 + material 객체
-    const geometry = new THREE.BoxGeometry(1, 1, 1); // 정육면체 형상 정의, 가로, 세로, 깊이 지정
-    const material = new THREE.MeshPhongMaterial({ color: 0x44a88 });
+    const rawPositions = [
+      -1, -1, 0,
+      1, -1, 0,
+      -1, 1, 0,
+      1, 1, 0,
+    ];
 
-    const cube = new THREE.Mesh(geometry, material);
+    const positions = new Float32Array(rawPositions);
 
-    this._scene.add(cube);
-    this._cube = cube;
+    // 법선 벡터를 직접 지정
+    const rawNormals = [0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1];
+    const normals = new Float32Array(rawNormals);
+
+    // 정점 색상 지정
+    const rawColors = [
+      1,0,0,
+      0,1,0,
+      0,0,1,
+      1,1,0,
+    ];
+    const colors = new Float32Array(rawColors);
+
+    // 텍스쳐 맵핑
+    const rawUvs = [
+      0, 0,
+      1, 0,
+      0, 1,
+      1, 1,
+    ];
+    const uvs = new Float32Array(rawUvs);
+
+    const geometry = new THREE.BufferGeometry();
+
+    geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3)); // 하나의 정점이 (x, y, z) 3개의 항목으로 구성됨
+    geometry.setAttribute("normal", new THREE.BufferAttribute(normals, 3));
+    geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+    geometry.setAttribute("uv", new THREE.BufferAttribute(uvs, 2));
+
+    // Vertex index 지정. 정점의 배치 순서가 반시계 방향이어여야 한다
+    geometry.setIndex([0, 1, 2, 2, 1, 3]);
+
+    // 모든 정점에 대해 법선 벡터를 자동으로 지정
+    // geometry.computeVertexNormals()
+
+    const textureLoader = new THREE.TextureLoader();
+    const map = textureLoader.load("/assets/uv_grid_opengl.jpg");
+
+    const material = new THREE.MeshPhongMaterial({ color: 0xffffff, map });
+    const box = new THREE.Mesh(geometry, material);
+    console.log('🔸 → App → _setupModel → box:', box);
+    
+    this._scene.add(box);
+
+    // 법선벡터 시각화
+    // const boxHelper = new VertexNormalsHelper(box, 0.1, 0xffff00)
+    // this._scene.add(boxHelper)
   }
 
   resize() {
@@ -82,9 +131,6 @@ class App {
 
   update(time) {
     time *= 0.001; // ms -> s
-    this._cube.rotation.x = time;
-    this._cube.rotation.y = time;
-    // 시간은 계속 변하므로 큐브가 계속 회전함
   }
 }
 
