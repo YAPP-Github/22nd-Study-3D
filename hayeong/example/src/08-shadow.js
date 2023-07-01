@@ -58,7 +58,7 @@ class App {
   }
 
   _getBigSphereMesh() {
-    const geometry = new THREE.SphereGeometry(1.5, 64, 64, 0, Math.PI);
+    const geometry = new THREE.TorusKnotGeometry(1, 0.3, 128, 64, 2, 3);
     const material = new THREE.MeshStandardMaterial({
       color: "#ffffff",
       roughness: 0.1,
@@ -66,7 +66,8 @@ class App {
     });
 
     const mesh = new THREE.Mesh(geometry, material);
-    mesh.rotation.x = THREE.MathUtils.degToRad(-90);
+    // mesh.rotation.x = THREE.MathUtils.degToRad(-90);
+    mesh.position.y = 1.6;
     return mesh;
   }
 
