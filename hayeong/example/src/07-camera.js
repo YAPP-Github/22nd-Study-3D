@@ -36,21 +36,24 @@ class App {
   _getOrthographicCamera() {
     const aspect = window.innerWidth / window.innerHeight;
     const camera = new THREE.OrthographicCamera(
-      -10 * aspect, 10 * aspect,  // xLeft, xRight
-      10, -10,  // yTop, yBottom
-      0.1, 100  // zNear, zFar
-    )
-    return camera
+      -1 * aspect,
+      1 * aspect, // xLeft, xRight
+      1,
+      -1, // yTop, yBottom
+      0.1,
+      100, // zNear, zFar
+    );
+    camera.zoom = 0.15;
+    return camera;
   }
 
   _setupCamera() {
     // const width = this._divContainer.clientWidth;
     // const height = this._divContainer.clientHeight;
     // const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 100);
-    
-    const camera = this._getOrthographicCamera()
 
-    camera.position.set(7, 7, 20);
+    const camera = this._getOrthographicCamera();
+    camera.position.set(7, 7, 0);
     camera.lookAt(0, 0, 0);
     this._camera = camera;
   }
@@ -128,7 +131,7 @@ class App {
 
   _setupLight() {
     RectAreaLightUniformsLib.init();
-    const light = new THREE.DirectionalLight(0xffffff, 10, 2, 0.5);
+    const light = new THREE.RectAreaLight(0xffffff, 50, 2, 0.5);
     light.position.set(0, 5, 0);
     light.rotation.x = THREE.MathUtils.degToRad(-90);
 
@@ -153,8 +156,14 @@ class App {
   resize() {
     const width = this._divContainer.clientWidth;
     const height = this._divContainer.clientHeight;
+    const aspect = width / height;
+    if (this._camera instanceof THREE.PerspectiveCamera) {
+      this._camera.aspect = aspect;
+    } else {
+      this._camera.left = -1 * aspect;
+      this._camera.right = 1 * aspect;
+    }
 
-    this._camera.aspect = width / height;
     this._camera.updateProjectionMatrix();
 
     this._renderer.setSize(width, height);
@@ -177,12 +186,13 @@ class App {
     if (smallShperePivot) {
       smallShperePivot.rotation.y = THREE.MathUtils.degToRad(time * 50);
 
-      if (this._light) {
-        const smallShpere = smallShperePivot.children[0];
-        // smallShpere.getWorldPosition(this._light.target.position);
-        // // smallSphere의 world 좌표계의 위치를 구해서 광원의 target 위치에 지정
 
-        // if (this._lightHelper) this._lightHelper.update();
+      if (this._light.target) {
+        const smallShpere = smallShperePivot.children[0];
+        smallShpere.getWorldPosition(this._light.target.position);
+        // smallSphere의 world 좌표계의 위치를 구해서 광원의 target 위치에 지정
+
+        if (this._lightHelper) this._lightHelper.update();
       }
     }
   }
