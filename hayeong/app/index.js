@@ -1,5 +1,7 @@
-import App from './src/01-basic.js'
+import GltfRenderer from "./src/GltfRenderer.js";
 
-window.onload = () => {
-  new App();
+window.onload = async () => {
+  const renderer = new GltfRenderer("/assets/DummyModel.glb");
+  await renderer.init();
+  renderer.render();
 };
