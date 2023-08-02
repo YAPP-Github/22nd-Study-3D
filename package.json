@@ -6,7 +6,8 @@
     "packages": [
       "sangjun/example",
       "hayeong/example",
-      "ahyeon/example"
+      "ahyeon/example",
+      "hayeong/app"
     ]
   },
   "scripts": {
