@@ -6,13 +6,15 @@
     "packages": [
       "sangjun/example",
       "hayeong/example",
-      "ahyeon/example"
+      "ahyeon/example",
+      "landing/ahyun"
     ]
   },
   "scripts": {
     "sj": "yarn workspace sangjun",
     "hy": "yarn workspace hayeong",
-    "ah": "yarn workspace ahyeon"
+    "ah": "yarn workspace ahyeon",
+    "ldah": "yarn workspace landing-ahyun"
   },
   "devDependencies": {
     "@types/webpack": "^5.28.1",
