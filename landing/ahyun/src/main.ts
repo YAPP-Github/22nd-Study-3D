@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 console.log("main.ts file");
@@ -19,6 +20,8 @@ class App {
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     this._renderer = renderer;
     renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFShadowMap;
 
     divContainer.appendChild(renderer.domElement);
 
@@ -39,7 +42,7 @@ class App {
     const width = this._divContainer.clientWidth;
     const height = this._divContainer.clientHeight;
     const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 100);
-    camera.position.z = 50;
+    camera.position.z = 5;
     this._camera = camera;
   }
 
@@ -52,17 +55,38 @@ class App {
   }
 
   private _setupModel() {
-    const mat = new THREE.MeshBasicMaterial({ color: 0xffffff });
-    const box = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), mat);
-    box.position.set(0, 0, 2);
-
-    const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.8, 32, 32), mat);
-    sphere.position.set(0, 0, 0);
-    this._scene.add(box, sphere);
+    const loader = new GLTFLoader();
+    const url = "./assets/test.glb";
+    loader.load(url, (glb) => {
+      const root = glb.scene;
+      this._scene.add(root);
+      this._zoomFit(root, this._camera);
+    });
   }
 
   private _setupControls() {
     new OrbitControls(this._camera, this._divContainer); // camera,webgl_container
+  }
+
+  private _zoomFit(obj: THREE.Object3D, camera: THREE.PerspectiveCamera) {
+    const box = new THREE.Box3().setFromObject(obj);
+    const sizeBox = box.getSize(new THREE.Vector3()).length();
+    const center = box.getCenter(new THREE.Vector3());
+
+    const halfSizeModel = sizeBox * 0.5;
+    const halfFov = THREE.MathUtils.degToRad(camera.fov * 0.5);
+
+    const dist = halfSizeModel / Math.tan(halfFov);
+    const dir = new THREE.Vector3().subVectors(center, camera.position).normalize();
+
+    const pos = dir.multiplyScalar(dist).add(center);
+    camera.position.copy(pos);
+
+    camera.near = sizeBox * 0.01;
+    camera.far = sizeBox * 100;
+
+    camera.updateProjectionMatrix();
+    camera.lookAt(center.x, center.y, center.z);
   }
 
   resize() {
