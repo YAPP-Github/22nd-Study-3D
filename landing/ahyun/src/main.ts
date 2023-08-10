@@ -2,14 +2,14 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { EXRLoader } from "three/examples/jsm/loaders/EXRLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-// import { CSS2DObject, CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer";
+import { CSS2DObject, CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer";
 
 class App {
   private _divContainer: HTMLElement;
   private _renderer: THREE.WebGLRenderer;
   private _scene: THREE.Scene;
   private _camera!: THREE.OrthographicCamera;
-  // private _labelRenderer: CSS2DRenderer;
+  private _labelRenderer: CSS2DRenderer;
 
   constructor() {
     const divContainer = document.querySelector("#webgl-container") as HTMLElement;
@@ -24,39 +24,46 @@ class App {
     divContainer.appendChild(renderer.domElement);
     const scene = new THREE.Scene();
     this._scene = scene;
-
-    // const labelRenderer = new CSS2DRenderer();
-    // this._labelRenderer = labelRenderer;
+    const labelRenderer = new CSS2DRenderer();
+    this._labelRenderer = labelRenderer;
 
     this._setupCamera();
     this._setupLight();
     this._setupModel();
     this._setupMap();
     this._setupControls();
-    // this._setupLabel();
+    this._setupLabel();
 
     window.onresize = this.resize.bind(this);
     this.resize();
-    this._divContainer.addEventListener("mouseover", this.onMouseHover.bind(this));
+    this._divContainer.addEventListener("click", this.handleLaycast.bind(this));
+    this._divContainer.addEventListener("mousemove", this.handleMouseMove.bind(this));
     requestAnimationFrame(this.render.bind(this));
   }
 
-  // private _setupLabel() {
-  //   const labelDiv = document.createElement("div");
-  //   labelDiv.className = "label";
-  //   labelDiv.textContent = "Ahhyun Kim";
-  //   labelDiv.style.display = "none";
-  //   labelDiv.style.padding = "16px";
-  //   labelDiv.style.backgroundColor = "#ffffff";
-  //   labelDiv.style.borderRadius = "16px";
-  //   labelDiv.style.marginTop = "-1em";
-  //   const nameLabel = new CSS2DObject(labelDiv);
-  //   let pos = new THREE.Vector3();
-  //   pos = this._scene.getWorldPosition(pos);
-  //   nameLabel.position.copy(pos);
-  //   this._scene.add(nameLabel);
-  //   document.body.appendChild(this._labelRenderer.domElement);
-  // }
+  private _setupLabel() {
+    // const labelDiv = document.createElement("div");
+    // labelDiv.className = "label";
+    // labelDiv.textContent = "Ahhyun Kim";
+    // labelDiv.style.display = "none";
+    // labelDiv.style.padding = "16px";
+    // labelDiv.style.backgroundColor = "#ffffff";
+    // labelDiv.style.borderRadius = "16px";
+    // labelDiv.style.marginTop = "-1em";
+    // const nameLabel = new CSS2DObject(labelDiv);
+    // let pos = new THREE.Vector3();
+    // pos = this._scene.getWorldPosition(pos);
+    // nameLabel.position.copy(pos);
+    // this._scene.add(nameLabel);
+    // document.body.appendChild(this._labelRenderer.domElement);
+
+    this._labelRenderer.setSize(window.innerWidth, window.innerHeight);
+    this._labelRenderer.domElement.style.position = "absolute";
+    this._labelRenderer.domElement.style.top = "0px";
+    this._labelRenderer.domElement.style.display = "none";
+    this._labelRenderer.domElement.style.pointerEvents = "none";
+    document.getElementById("webgl-container")!.appendChild(this._labelRenderer.domElement);
+  }
 
   private _setupCamera() {
     const aspect = window.innerWidth / window.innerHeight;
@@ -125,24 +132,31 @@ class App {
   }
 
   private _setupModel() {
-    const pivot = new THREE.Object3D();
-    pivot.name = "pivot";
+    // const pivot = new THREE.Object3D();
+    // pivot.name = "pivot";
 
     const loader = new GLTFLoader();
-    const head = "./assets/lucario.glb";
+    const head = "./assets/test.glb";
     loader.load(head, (glb) => {
       glb.scene.traverse((obj) => {
         obj.children.forEach((child) => {
           if ((child as THREE.Mesh).isMesh) child.castShadow = child.receiveShadow = true;
         });
       });
-      const root = glb.scene;
-      root.position.set(0, 0, 0);
-      pivot.add(root);
-      this._zoomFit(pivot, this._camera);
-    });
+      const glbScene = glb.scene;
 
-    this._scene.add(pivot);
+      const text = document.createElement("div");
+      text.className = "label";
+      text.textContent = "뭔가 라벨을 붙일수있어요";
+      text.style.backgroundColor = "white";
+      const label = new CSS2DObject(text);
+      glbScene.name = "myHead";
+      glbScene.position.set(10, 0, 0);
+      glbScene.add(label);
+
+      this._zoomFit(glbScene, this._camera);
+      this._scene.add(glbScene);
+    });
   }
 
   private _setupControls() {
@@ -172,25 +186,48 @@ class App {
     camera.lookAt(center.x, center.y, center.z);
   }
 
-  onMouseHover(event: MouseEvent): void {
+  handleMouseMove(event: MouseEvent): void {
     event.preventDefault();
-    console.log("down!");
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    raycaster.setFromCamera(mouse, this._camera);
+
+    const intersectList = raycaster.intersectObjects(this._scene.children, true);
+
+    if (intersectList.length > 0) {
+      for (const intersect of intersectList) {
+        if (intersect.object.parent?.name === "myHead") {
+          this._labelRenderer.domElement.style.display = "block";
+          return;
+        }
+      }
+    }
+    this._labelRenderer.domElement.style.display = "none";
+  }
+
+  handleLaycast(event: MouseEvent): void {
+    event.preventDefault();
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
     //https://stackoverflow.com/questions/18553209/orthographic-camera-and-selecting-objects-with-raycast
-    const vector = new THREE.Vector3(mouse.x, mouse.y, 0.5);
-    vector.unproject(this._camera);
-    const dir = vector.sub(this._camera.position).normalize();
+    // const vector = new THREE.Vector3(mouse.x, mouse.y, 0.5);
+    // vector.unproject(this._camera);
+    // const dir = vector.sub(this._camera.position).normalize();
 
-    raycaster.ray.set(vector, dir);
-    raycaster.ray.origin.z = 100;
+    // raycaster.ray.set(vector, dir);
+    // raycaster.ray.origin.z = 100;
     raycaster.setFromCamera(mouse, this._camera);
 
-    const intersect = raycaster.intersectObjects(this._scene.children, false);
-    console.log(intersect);
+    const origin = raycaster.ray.origin;
+    const direction = raycaster.ray.direction;
+    const length = 1000; // 화살표 길이; 적절한 값으로 조정
+    const arrowHelper = new THREE.ArrowHelper(direction, origin, length, 0xff0000); // 빨간색 화살표
+    this._scene.add(arrowHelper);
   }
 
   resize() {
@@ -200,14 +237,14 @@ class App {
     // this._camera.aspect = width / height;
     this._camera.updateProjectionMatrix();
     this._renderer.setSize(width, height);
-    // this._labelRenderer.setSize(width, height);
+    this._labelRenderer.setSize(width, height);
   }
 
   update(time: number) {
     time *= 0.001;
-    const pivot = this._scene.getObjectByName("pivot");
+    const pivot = this._scene.getObjectByName("myHead");
     if (pivot) {
-      pivot.rotation.y = THREE.MathUtils.degToRad(time * 50);
+      pivot.rotation.y = THREE.MathUtils.degToRad(time * 10);
     }
   }
 
@@ -215,7 +252,7 @@ class App {
     this.update(time);
     this._renderer.render(this._scene, this._camera);
 
-    // this._labelRenderer.render(this._scene, this._camera);
+    this._labelRenderer.render(this._scene, this._camera);
     requestAnimationFrame(this.render.bind(this));
   }
 }
