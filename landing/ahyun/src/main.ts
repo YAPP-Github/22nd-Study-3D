@@ -2,7 +2,8 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { EXRLoader } from "three/examples/jsm/loaders/EXRLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { CSS2DObject, CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer";
+import { CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer";
+import createLabel from "./label";
 
 class App {
   private _divContainer: HTMLElement;
@@ -10,6 +11,10 @@ class App {
   private _scene: THREE.Scene;
   private _camera!: THREE.OrthographicCamera;
   private _labelRenderer: CSS2DRenderer;
+  private _center: THREE.Vector3;
+  private _isUserInteracting: boolean = false;
+  private _modelInfo: { src: string; name: string; position: THREE.Vector3Tuple; spinSpeed: number }[];
+  private _activeLabel: null | HTMLElement = null;
 
   constructor() {
     const divContainer = document.querySelector("#webgl-container") as HTMLElement;
@@ -26,22 +31,83 @@ class App {
     this._scene = scene;
     const labelRenderer = new CSS2DRenderer();
     this._labelRenderer = labelRenderer;
+    const axesHelper = new THREE.AxesHelper(5); // 5는 헬퍼의 크기를 나타냅니다.
+    scene.add(axesHelper);
+
+    const center = new THREE.Vector3(0, 0, 0); // 원의 중심 좌표
+    this._center = center;
+
+    this._modelInfo = [
+      {
+        src: "./assets/test.glb",
+        name: "myHead_0",
+        position: this.getSquaredRandomPosition([10, 10, 10]),
+        spinSpeed: this.getRandomSpinSpeed(),
+      },
+      {
+        src: "./assets/test.glb",
+        name: "myHead_1",
+        position: this.getSquaredRandomPosition([10, 10, 10]),
+        spinSpeed: this.getRandomSpinSpeed(),
+      },
+      {
+        src: "./assets/test.glb",
+        name: "myHead_2",
+        position: this.getSquaredRandomPosition([10, 10, 10]),
+        spinSpeed: this.getRandomSpinSpeed(),
+      },
+      {
+        src: "./assets/test.glb",
+        name: "myHead_3",
+        position: this.getSquaredRandomPosition([10, 10, 10]),
+        spinSpeed: this.getRandomSpinSpeed(),
+      },
+      {
+        src: "./assets/test.glb",
+        name: "myHead_4",
+        position: this.getSquaredRandomPosition([10, 10, 10]),
+        spinSpeed: this.getRandomSpinSpeed(),
+      },
+      {
+        src: "./assets/test.glb",
+        name: "myHead_5",
+        position: this.getSquaredRandomPosition([10, 10, 10]),
+        spinSpeed: this.getRandomSpinSpeed(),
+      },
+      {
+        src: "./assets/test.glb",
+        name: "myHead_6",
+        position: this.getSquaredRandomPosition([10, 10, 10]),
+        spinSpeed: this.getRandomSpinSpeed(),
+      },
+      {
+        src: "./assets/test.glb",
+        name: "myHead_7",
+        position: this.getSquaredRandomPosition([10, 10, 10]),
+        spinSpeed: this.getRandomSpinSpeed(),
+      },
+    ];
 
     this._setupCamera();
     this._setupLight();
-    this._setupModel();
     this._setupMap();
     this._setupControls();
-    this._setupLabel();
+    this._setupLabelRenderer();
 
-    window.onresize = this.resize.bind(this);
+    this._modelInfo.forEach((info) => {
+      this._setupGlbModel(info);
+    });
+
+    // window.onresize = this.resize.bind(this);
     this.resize();
-    this._divContainer.addEventListener("click", this.handleLaycast.bind(this));
+
+    // this._divContainer.addEventListener("click", this.handleLaycast.bind(this));
     this._divContainer.addEventListener("mousemove", this.handleMouseMove.bind(this));
+    window.addEventListener("resize", this.resize.bind(this));
     requestAnimationFrame(this.render.bind(this));
   }
 
-  private _setupLabel() {
+  private _setupLabelRenderer() {
     // const labelDiv = document.createElement("div");
     // labelDiv.className = "label";
     // labelDiv.textContent = "Ahhyun Kim";
@@ -60,7 +126,6 @@ class App {
     this._labelRenderer.setSize(window.innerWidth, window.innerHeight);
     this._labelRenderer.domElement.style.position = "absolute";
     this._labelRenderer.domElement.style.top = "0px";
-    this._labelRenderer.domElement.style.display = "none";
     this._labelRenderer.domElement.style.pointerEvents = "none";
     document.getElementById("webgl-container")!.appendChild(this._labelRenderer.domElement);
   }
@@ -72,10 +137,14 @@ class App {
       1 * aspect, // xLeft, xRight
       1,
       -1, // yTop, yBottom
-      1,
-      100, // zNear, zFar
+      0.1,
+      1000, // zNear, zFar
     );
-    camera.position.z = 5;
+    camera.position.x = 100;
+    camera.position.y = 100;
+    camera.position.z = 100;
+    camera.zoom = 0.1;
+    camera.lookAt(this._center);
     this._camera = camera;
   }
 
@@ -98,11 +167,6 @@ class App {
     spotLightR.penumbra = 0.4;
     this._scene.add(spotLightR.target);
     this._scene.add(spotLightR);
-
-    // const helperLeft = new THREE.SpotLightHelper(spotLightL);
-    // this._scene.add(helperLeft);
-    // const helperRight = new THREE.SpotLightHelper(spotLightR);
-    // this._scene.add(helperRight);
   }
 
   private _setupMap() {
@@ -131,30 +195,32 @@ class App {
     });
   }
 
-  private _setupModel() {
+  private _setupGlbModel({
+    src,
+    name,
+    position = [0, 0, 0],
+  }: {
+    src: string;
+    name: string;
+    position?: THREE.Vector3Tuple;
+  }) {
     // const pivot = new THREE.Object3D();
     // pivot.name = "pivot";
 
     const loader = new GLTFLoader();
-    const head = "./assets/test.glb";
-    loader.load(head, (glb) => {
+
+    loader.load(src, (glb) => {
       glb.scene.traverse((obj) => {
         obj.children.forEach((child) => {
           if ((child as THREE.Mesh).isMesh) child.castShadow = child.receiveShadow = true;
         });
       });
       const glbScene = glb.scene;
+      glbScene.name = name;
+      glbScene.position.set(...position);
 
-      const text = document.createElement("div");
-      text.className = "label";
-      text.textContent = "뭔가 라벨을 붙일수있어요";
-      text.style.backgroundColor = "white";
-      const label = new CSS2DObject(text);
-      glbScene.name = "myHead";
-      glbScene.position.set(10, 0, 0);
+      const label = createLabel({ object: glbScene });
       glbScene.add(label);
-
-      this._zoomFit(glbScene, this._camera);
       this._scene.add(glbScene);
     });
   }
@@ -162,28 +228,53 @@ class App {
   private _setupControls() {
     const controls = new OrbitControls(this._camera, this._divContainer); // camera,webgl_container
     controls.maxDistance = 100;
-    controls.minDistance = 4;
+    controls.minDistance = 100;
+    controls.minPolarAngle = THREE.MathUtils.degToRad(0); // radians
+    controls.maxPolarAngle = THREE.MathUtils.degToRad(180); // radians
+    controls.target.set(0, 0, 0);
+
+    const handleInteracting = (state: boolean) => {
+      this._isUserInteracting = state;
+    };
+    controls.addEventListener("start", () => handleInteracting.bind(this)(true));
+    controls.addEventListener("end", () => handleInteracting.bind(this)(false));
   }
 
-  private _zoomFit(obj: THREE.Object3D, camera: THREE.OrthographicCamera) {
-    const box = new THREE.Box3().setFromObject(obj);
-    const sizeBox = box.getSize(new THREE.Vector3()).length();
-    const center = box.getCenter(new THREE.Vector3());
+  // private _zoomFit(obj: THREE.Object3D, camera: THREE.OrthographicCamera) {
+  //   const box = new THREE.Box3().setFromObject(obj);
+  //   const sizeBox = box.getSize(new THREE.Vector3()).length();
+  //   const center = box.getCenter(new THREE.Vector3());
 
-    const halfSizeModel = sizeBox * 0.5;
-    const halfFov = THREE.MathUtils.degToRad(camera.right * 0.5);
+  //   const halfSizeModel = sizeBox * 0.5;
+  //   const halfFov = THREE.MathUtils.degToRad(camera.right * 0.5);
 
-    const dist = halfSizeModel / Math.tan(halfFov);
-    const dir = new THREE.Vector3().subVectors(center, camera.position).normalize();
+  //   const dist = halfSizeModel / Math.tan(halfFov);
+  //   const dir = new THREE.Vector3().subVectors(center, camera.position).normalize();
 
-    const pos = dir.multiplyScalar(dist).add(center);
-    camera.position.copy(pos);
+  //   const pos = dir.multiplyScalar(dist).add(center);
+  //   camera.position.copy(pos);
 
-    camera.near = sizeBox * 0.01;
-    camera.far = sizeBox * 100;
+  //   camera.near = sizeBox * 0.01;
+  //   camera.far = sizeBox * 100;
 
-    camera.updateProjectionMatrix();
-    camera.lookAt(center.x, center.y, center.z);
+  //   camera.updateProjectionMatrix();
+  //   camera.lookAt(center.x, center.y, center.z);
+  // }
+
+  getSquaredRandomPosition(range: THREE.Vector3Tuple): THREE.Vector3Tuple {
+    const random = range.map((r) => {
+      const randomNumb = THREE.MathUtils.randFloat(-1, 1);
+      const sign = Math.sign(randomNumb);
+
+      const result = randomNumb * randomNumb * sign * r;
+      return result;
+    }) as THREE.Vector3Tuple;
+
+    return random;
+  }
+
+  getRandomSpinSpeed() {
+    return THREE.MathUtils.randFloat(-3, 3);
   }
 
   handleMouseMove(event: MouseEvent): void {
@@ -194,17 +285,34 @@ class App {
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
     raycaster.setFromCamera(mouse, this._camera);
 
+    const deleteActiveLabel = () => {
+      if (this._activeLabel) {
+        this._activeLabel.classList.remove("on");
+        this._activeLabel = null;
+      }
+    };
+    const addActiveLabel = (label: HTMLElement | null) => {
+      if (label) {
+        this._activeLabel = label;
+        this._activeLabel.classList.add("on");
+      }
+    };
+
     const intersectList = raycaster.intersectObjects(this._scene.children, true);
 
     if (intersectList.length > 0) {
       for (const intersect of intersectList) {
-        if (intersect.object.parent?.name === "myHead") {
-          this._labelRenderer.domElement.style.display = "block";
-          return;
+        const name = intersect.object.parent?.name!;
+        if (/myHead/g.test(name)) {
+          const id = `${intersect.object.parent?.name!}_label`;
+          const label = document.getElementById(id);
+          deleteActiveLabel();
+          addActiveLabel(label);
         }
       }
+    } else {
+      deleteActiveLabel();
     }
-    this._labelRenderer.domElement.style.display = "none";
   }
 
   handleLaycast(event: MouseEvent): void {
@@ -240,19 +348,66 @@ class App {
     this._labelRenderer.setSize(width, height);
   }
 
-  update(time: number) {
-    time *= 0.001;
-    const pivot = this._scene.getObjectByName("myHead");
-    if (pivot) {
-      pivot.rotation.y = THREE.MathUtils.degToRad(time * 10);
+  update() {
+    this._scene.traverse((obj) => {
+      if (/myHead/g.test(obj.name)) {
+        const index = Number(obj.name.split("_")[1]);
+        if (!index) return;
+        const spinSpeed = this._modelInfo[index].spinSpeed;
+        obj.rotation.y += THREE.MathUtils.degToRad(spinSpeed);
+      }
+    });
+
+    // const pivot = this._scene.getObjectByName("myHead");
+    // const pivot2 = this._scene.getObjectByName("myHead2");
+    // if (!(pivot && pivot2)) return;
+    // pivot.rotation.y = THREE.MathUtils.degToRad(time * 10);
+    // pivot2.rotation.y = THREE.MathUtils.degToRad(time * 10);
+  }
+
+  updateCameraStatus() {
+    const statusElement = document.getElementById("camera_status");
+
+    const { x: px, y: py, z: pz } = this._camera.position;
+    const { x: rx, y: ry, z: rz } = this._camera.rotation;
+
+    const cameraDirection = new THREE.Vector3();
+    this._camera.getWorldDirection(cameraDirection);
+    const angleInRadians = cameraDirection.angleTo(new THREE.Vector3(0, 1, 0));
+    const angleInDegrees = THREE.MathUtils.radToDeg(angleInRadians);
+
+    const cameraStatus = document.createElement("div");
+    cameraStatus.id = "camera_status";
+    cameraStatus.style.position = "fixed";
+    cameraStatus.style.top = "0";
+    cameraStatus.style.left = "0";
+    cameraStatus.style.backgroundColor = "white";
+    if (!statusElement) document.body.appendChild(cameraStatus);
+
+    if (statusElement) {
+      statusElement.innerHTML = `
+      Position: ${Number(px).toFixed(4)}, ${Number(py).toFixed(4)}, ${Number(pz).toFixed(4)}<br>
+      Rotation: ${Number(rx).toFixed(4)}, ${Number(ry).toFixed(4)}, ${Number(rz).toFixed(4)}<br>
+      Direction: ${Number(angleInDegrees).toFixed(4)}<br>
+      Zoom: ${this._camera.zoom}
+      `;
     }
   }
 
-  render(time: number) {
-    this.update(time);
-    this._renderer.render(this._scene, this._camera);
+  /**
+   * xy평면 회전
+   */
+  rotateScene() {
+    if (this._isUserInteracting) return;
+    this._scene.rotation.y += THREE.MathUtils.degToRad(0.1);
+  }
 
+  render() {
+    this.update();
+    this.rotateScene();
+    this._renderer.render(this._scene, this._camera);
     this._labelRenderer.render(this._scene, this._camera);
+    // this.updateCameraStatus();
     requestAnimationFrame(this.render.bind(this));
   }
 }
